@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WebpHub.MVVM.Views.Pages.GuideView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WebpHub.MVVM.Views.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required"
+    Background="{ThemeResource GridColor}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*" />
+            <ColumnDefinition Width="70*" />
+            <ColumnDefinition Width="15*" />
+        </Grid.ColumnDefinitions>
+
+
+
+        <RichTextBlock Grid.Column="1" Foreground="{ThemeResource TextColor}">
+            <Paragraph FontSize="45" TextAlignment="Center">Hi User</Paragraph>
+            <Paragraph>
+                This app is was design to make your life easier, it leverage the power of libwebp exe files to create an easy way to convert other image formats to webp
+            format, anything you can do in this app you can do in using
+                <Hyperlink Foreground="{ThemeResource TextColor}" NavigateUri="https://developers.google.com/speed/webp/download">LibWebP</Hyperlink>
+                but this app makes life easier.
+                <LineBreak />
+                <LineBreak />
+                Encode = convert jpg, png, tiff and webp images to a webp image
+                <LineBreak />
+                Decode = convert a webp image to png, pam, ppm or pgm images
+                <LineBreak />
+                Animated = convert a gif to an animated webp
+                <LineBreak />
+                <LineBreak />
+                the app support bulk conversion so you can convert images in mass, sadly the app doesn't support creating an animated webp from multiple images, hopefully in future releases this will be addressed
+                <LineBreak />
+                the app can't display  pam, ppm or pgm images
+                <LineBreak />
+                <LineBreak />
+                the app value your time, it tries to balance between resources consumption and user time, keep in your mind that the app tries to finish the job as quickly as possible so a rise in cpu and ram usage will occurs
+                <LineBreak/> loading large images or collections take some time
+            </Paragraph>
+        </RichTextBlock>
+    </Grid>
+</Page>

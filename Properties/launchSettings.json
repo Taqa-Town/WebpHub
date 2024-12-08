@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WebpHub (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WebpHub (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
