@@ -1,4 +1,4 @@
-﻿using MetadataExtractor;
+﻿using SixLabors.ImageSharp;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -11,20 +11,25 @@ public class WebpCenterModel
 {
     public string Options { get; set; } = string.Empty;
 
-    public bool IsAnimatedWebp(string path)
+    public static bool IsAnimatedWebp(string path)
     {
-        var dirs = ImageMetadataReader.ReadMetadata(path);
-        var selectedDir = dirs.SelectMany(dir => dir.Tags)
-            .Where(tag => tag.Name.Contains("Animation"));
-        Tag tag = selectedDir.FirstOrDefault(tag => tag.Name.Contains("Animation"));
-        string result = tag?.Description ?? string.Empty;
-        if (result.Contains("true"))
+        var img = SixLabors.ImageSharp.Image.Load(path);
+        var meta = img.Metadata;
+        var origins = meta.DecodedImageFormat;
+        var ext = origins!.FileExtensions;
+        string? val = ext.FirstOrDefault(c => c.Contains("webp"));
+        if(string.IsNullOrEmpty(val) || string.IsNullOrWhiteSpace(val) || !val.Contains("webp"))
+            return false;
+        
+        var webp = meta.GetWebpMetadata();
+        int check = webp.RepeatCount;
+        if (check == 0 || check > 1)
             return true;
         else
             return false;
     }
 
-    public async Task<bool> ScriptRunner(string exe, string input, string folderPath, string options = "")
+    public static async Task<bool> ScriptRunner(string exe, string input, string folderPath, string options = "")
     {
         var filename = System.IO.Path.GetFileNameWithoutExtension(input);
         var newFilename = System.IO.Path.Combine(folderPath, $"{filename}.webp");
@@ -41,7 +46,7 @@ public class WebpCenterModel
         return true;
     }
 
-    public async Task<bool> ScriptRunner(string exe, string input, string folderPath, string options, string format)
+    public static async Task<bool> ScriptRunner(string exe, string input, string folderPath, string options, string format)
     {
         var filename = System.IO.Path.GetFileNameWithoutExtension(input);
         var newFilename = System.IO.Path.Combine(folderPath, $"{filename}{format}");
@@ -58,7 +63,7 @@ public class WebpCenterModel
         return true;
     }
 
-    public async Task ScriptRunnerBulk(string exe, ObservableCollection<ImageModel> list, string folderPath, string options = "")
+    public static async Task ScriptRunnerBulk(string exe, List<ImmutableImageModel> list, string folderPath, string options = "")
     {
         using var proc = new Process();
         proc.StartInfo.FileName = exe;
@@ -84,7 +89,7 @@ public class WebpCenterModel
         await Task.CompletedTask;
     }
 
-    public async Task ScriptRunnerBulk(string exe, ObservableCollection<ImageModel> list, string folderPath, string format, string options = "")
+    public static async Task ScriptRunnerBulk(string exe, List<ImmutableImageModel> list, string folderPath, string format, string options = "")
     {
         using var proc = new Process();
         proc.StartInfo.FileName = exe;

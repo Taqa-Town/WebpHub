@@ -29,6 +29,7 @@
                 CanReorderItems="True"
                 FlowDirection="LeftToRight"
                 IsItemClickEnabled="True"
+                Margin="10"
                 ItemsSource="{x:Bind ViewModel.ImagesList, Mode=TwoWay}"
                 SelectionMode="None">
 

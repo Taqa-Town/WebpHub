@@ -1,11 +1,4 @@
-﻿using MetadataExtractor;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Windows.Storage;
 
 namespace WebpHub.InternalServices;
 
@@ -27,7 +20,7 @@ public class DataExtractorService
         ImageResolution = ExtractImageResolution(file);
     }
 
-    private string ExtractSize(StorageFile file)
+    private static string ExtractSize(StorageFile file)
     {
         FileInfo fileInfo = new(file.Path);
         string SizeString;
@@ -44,22 +37,9 @@ public class DataExtractorService
         return SizeString;
     }
 
-    private string ExtractImageResolution(StorageFile file)
+    private static string ExtractImageResolution(StorageFile file)
     {
-        var dirs = ImageMetadataReader.ReadMetadata(file.Path);
-
-        var selectedDirHeight = dirs.SelectMany(dir => dir.Tags)
-            .Where(tag => tag.Name.Contains("Height"));
-
-        var selectedDirWidth = dirs.SelectMany(dir => dir.Tags)
-            .Where(tag => tag.Name.Contains("Width"));
-
-        Tag tagHeight = selectedDirHeight.FirstOrDefault(tag => tag.Name.Contains("Height"));
-        Tag tagWidth = selectedDirWidth.FirstOrDefault(tag => tag.Name.Contains("Width"));
-
-        string Height = tagHeight.Description.Replace("pixels", "").Trim();
-        string Width = tagWidth.Description.Replace("pixels", "").Trim();
-
-        return $"{Width}x{Height}";
+        var img = SixLabors.ImageSharp.Image.Load(file.Path);
+        return $"{img.Width}x{img.Height}";
     }
 }

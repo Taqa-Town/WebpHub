@@ -7,9 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:WebpHub.MVVM.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:object="using:WebpHub.MVVM.Models"
     xmlns:viewmodels="using:WebpHub.MVVM.ViewModels"
     x:Name="DecodeBulk"
-    xmlns:object="using:WebpHub.MVVM.Models"
     d:DataContext="{d:DesignInstance Type=viewmodels:DecodeBulkViewModel}"
     Background="{ThemeResource GridColor}"
     NavigationCacheMode="Required"
@@ -24,6 +24,7 @@
 
             <GridView
                 x:Name="GridPreviewer"
+                Margin="10"
                 AllowDrop="True"
                 CanDragItems="True"
                 CanReorderItems="True"

@@ -1,14 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WebpHub.MVVM.Models;
-using Windows.Storage.Pickers;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
@@ -17,6 +13,7 @@ public partial class EncodeBulkViewModel: ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<ImageModel> _imagesList = [];
+    public List<ImmutableImageModel> IMImageList { get; private set; } = [];
 
     [ObservableProperty]
     private string _folderPath = App.DefaultFolderPath;
@@ -31,13 +28,13 @@ public partial class EncodeBulkViewModel: ObservableObject
     private bool _passedTheLimit = false;
 
     [ObservableProperty]
-    private string _passedTheLimitMessage;
+    private string _passedTheLimitMessage = string.Empty;
 
     [ObservableProperty]
     private bool _violateCondition = false;
 
     [ObservableProperty]
-    private string _warrningMessage;
+    private string _warrningMessage = string.Empty;
 
     [RelayCommand]
     public async Task Encode()
@@ -63,18 +60,18 @@ public partial class EncodeBulkViewModel: ObservableObject
         {
             ProgISActive = true;
             
-            if (ImagesList.Count >= 1000)
+            if (IMImageList.Count >= 1000)
             {
-                var lists = TOListOfList(ImagesList.ToList());
+                var lists = TOListOfLists(IMImageList);
                 await Task.Run(
                 () => Parallel.ForEach(lists, async (subList) =>
                 {
-                    await EncodeBulkView.WebpManager.ScriptRunnerBulk(App.CwebpFilePath, subList, FolderPath, EncodeBulkView.WebpManager.Options);
+                    await WebpCenterModel.ScriptRunnerBulk(App.CwebpFilePath, subList, FolderPath, EncodeBulkView.WebpManager.Options);
                 }));
             }
             else
             {
-                await Task.Run(() => EncodeBulkView.WebpManager.ScriptRunnerBulk(App.CwebpFilePath, ImagesList, FolderPath, EncodeBulkView.WebpManager.Options));
+                await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.CwebpFilePath, IMImageList, FolderPath, EncodeBulkView.WebpManager.Options));
             }
             InfobarOpen = true;
             ProgISActive = false;
@@ -96,11 +93,13 @@ public partial class EncodeBulkViewModel: ObservableObject
         int id = 0;
         int voilate = 0;
         int isAnimated = 0;
+        
         if (files != null)
         {
+            ProgISActive = true;
             foreach (var item in files)
             {
-                bool check = EncodeBulkView.WebpManager.IsAnimatedWebp(item.Path);
+                bool check = WebpCenterModel.IsAnimatedWebp(item.Path);
                 FileInfo info = new(item.Path);
                 if (info.Length > 110_100_480) // 105mb
                 {
@@ -114,7 +113,9 @@ public partial class EncodeBulkViewModel: ObservableObject
                 }
                 id++;
                 ImagesList.Add(new(item.Path, id, info.Length));
+                IMImageList.Add(new ImmutableImageModel { Location = item.Path, ID = id, Size = info.Length });
             }
+            ProgISActive = false;
         }
         if (voilate > 0)
         {
@@ -127,6 +128,7 @@ public partial class EncodeBulkViewModel: ObservableObject
             WarrningMessage = $"{isAnimated} file(s) is animated webp, they can't be encoded";
         }
         InfobarOpen = false;
+        ProgISActive = false;
     }
 
     [RelayCommand]
@@ -161,19 +163,19 @@ public partial class EncodeBulkViewModel: ObservableObject
         ImagesList.Clear();
     }
 
-    private static ObservableCollection<ObservableCollection<ImageModel>> TOListOfList(List<ImageModel> ogList)
+    private static List<List<ImmutableImageModel>> TOListOfLists(List<ImmutableImageModel> ogList)
     {
-        ObservableCollection<ObservableCollection<ImageModel>> newlist = [];
+        List<List<ImmutableImageModel>> newlist = [];
         int totalSize = ogList.Count;
         int partSize = totalSize / 3;
         int remainder = totalSize % 3;
 
-        List<ImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
-        List<ImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
-        List<ImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
-        newlist.Add(new ObservableCollection<ImageModel>(list1)); 
-        newlist.Add(new ObservableCollection<ImageModel>(list2));
-        newlist.Add(new ObservableCollection<ImageModel>(list3));
+        List<ImmutableImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
+        List<ImmutableImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
+        List<ImmutableImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
+        newlist.Add(list1);
+        newlist.Add(list2);
+        newlist.Add(list3);
         return newlist;
     }
 

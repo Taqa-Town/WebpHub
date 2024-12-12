@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using WebpHub.InternalServices;
-using WebpHub.MVVM.Models;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -16,25 +15,25 @@ public partial class EncodeAnimatedWebpViewModel: ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    private string _fullPath;
+    private string _fullPath = string.Empty;
 
     [ObservableProperty]
-    private string _fileName;
+    private string _fileName = string.Empty;
 
     [ObservableProperty]
-    private string _imageResolution;
+    private string _imageResolution = string.Empty;
 
     [ObservableProperty]
-    private string _imageExtension;
+    private string _imageExtension = string.Empty;
 
     [ObservableProperty]
-    private string _imageSize;
+    private string _imageSize = string.Empty;
 
     [ObservableProperty]
     private bool _OpenPop = false;
 
     [ObservableProperty]
-    private ImageDataModel _newImageData;
+    private ImageDataModel? _newImageData;
 
     [ObservableProperty]
     private bool _infobarOpen = false;
@@ -43,7 +42,7 @@ public partial class EncodeAnimatedWebpViewModel: ObservableObject
     private string _infoMessage = string.Empty;
 
     [ObservableProperty]
-    private string _error;
+    private string _error = string.Empty;
 
     [ObservableProperty]
     private bool _progISActive = false;
@@ -52,7 +51,7 @@ public partial class EncodeAnimatedWebpViewModel: ObservableObject
     private bool _violateCondition = false;
 
     [ObservableProperty]
-    private string _warrningMessage;
+    private string _warrningMessage = string.Empty;
 
     [RelayCommand]
     public async Task Import()
@@ -108,7 +107,7 @@ public partial class EncodeAnimatedWebpViewModel: ObservableObject
         else
         {
             ProgISActive = true;
-            bool isDone = await Task.Run(() => AnimatedWebpView.WebpManager.ScriptRunner(App.Gif2WebpFilePath, FullPath, FolderPath, AnimatedWebpView.WebpManager.Options));
+            bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.Gif2WebpFilePath, FullPath, FolderPath, AnimatedWebpView.WebpManager.Options));
 
             if (isDone is true)
             {

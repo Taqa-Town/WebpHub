@@ -1,13 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebpHub.InternalServices;
-using WebpHub.MVVM.Models;
-using Windows.Storage.Pickers;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
@@ -20,25 +15,25 @@ public partial class EncodeViewModel: ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    private string _fullPath;
+    private string _fullPath = string.Empty;
 
     [ObservableProperty]
-    private string _fileName;
+    private string _fileName = string.Empty;
 
     [ObservableProperty]
-    private string _imageResolution;
+    private string _imageResolution = string.Empty;
 
     [ObservableProperty]
-    private string _imageExtension;
+    private string _imageExtension = string.Empty;
 
     [ObservableProperty]
-    private string _imageSize;
+    private string _imageSize= string.Empty;
 
     [ObservableProperty]
     private bool _OpenPop = false;
 
     [ObservableProperty]
-    private ImageDataModel _newImageData;
+    private ImageDataModel? _newImageData;
 
     [ObservableProperty]
     private bool _infobarOpen = false;
@@ -50,7 +45,7 @@ public partial class EncodeViewModel: ObservableObject
     private bool _violateCondition = false;
 
     [ObservableProperty]
-    private string _warrningMessage;
+    private string _warrningMessage = string.Empty;
 
     [RelayCommand(CanExecute = nameof(CanEncode))]
     public async Task Encode()
@@ -65,7 +60,7 @@ public partial class EncodeViewModel: ObservableObject
         else
         {
             ProgISActive = true;
-            bool isDone = await Task.Run(() => EncodeView.WebpManager.ScriptRunner(App.CwebpFilePath, FullPath, FolderPath, EncodeView.WebpManager.Options));
+            bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.CwebpFilePath, FullPath, FolderPath, EncodeView.WebpManager.Options));
             if (isDone is true)
             {
                 var name = System.IO.Path.GetFileNameWithoutExtension(FullPath) + ".webp";
@@ -93,7 +88,7 @@ public partial class EncodeViewModel: ObservableObject
         InitializeWithWindow.Initialize(openPicker, hWnd);
 
         var file = await openPicker.PickSingleFileAsync();
-        bool check = EncodeView.WebpManager.IsAnimatedWebp(file.Path);
+        bool check = WebpCenterModel.IsAnimatedWebp(file.Path);
         if (check is true)
         {
             ViolateCondition = true;

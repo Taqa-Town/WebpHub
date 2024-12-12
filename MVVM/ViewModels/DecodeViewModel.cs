@@ -16,25 +16,25 @@ public partial class DecodeViewModel: ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DecodeCommand))]
-    private string _fullPath;
+    private string _fullPath = string.Empty;
 
     [ObservableProperty]
-    private string _fileName;
+    private string _fileName = string.Empty;
 
     [ObservableProperty]
-    private string _imageResolution;
+    private string _imageResolution = string.Empty;
 
     [ObservableProperty]
-    private string _imageExtension;
+    private string _imageExtension = string.Empty;
 
     [ObservableProperty]
-    private string _imageSize;
+    private string _imageSize = string.Empty;
 
     [ObservableProperty]
     private bool _OpenPop = false;
 
     [ObservableProperty]
-    private ImageDataModel _newImageData;
+    private ImageDataModel? _newImageData;
 
     [ObservableProperty]
     private bool _infobarOpen = false;
@@ -46,7 +46,7 @@ public partial class DecodeViewModel: ObservableObject
     private bool _violateCondition = false;
 
     [ObservableProperty]
-    private string _warrningMessage;
+    private string _warrningMessage = string.Empty;
 
     [RelayCommand(CanExecute = nameof(CanDecode))]
     public async Task Decode()
@@ -62,7 +62,7 @@ public partial class DecodeViewModel: ObservableObject
         {
             ProgISActive = true;
             ViolateCondition = false;
-            bool isDone = await Task.Run(() => DecodeView.WebpManager.ScriptRunner(App.DwebpFilePath, FullPath, FolderPath, DecodeView.WebpManager.Options, DecodeView.FormatType));
+            bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.DwebpFilePath, FullPath, FolderPath, DecodeView.WebpManager.Options, DecodeView.FormatType));
 
             if (isDone is true)
             {
@@ -95,7 +95,7 @@ public partial class DecodeViewModel: ObservableObject
         InitializeWithWindow.Initialize(openPicker, hWnd);
 
         var file = await openPicker.PickSingleFileAsync();
-        bool check = DecodeView.WebpManager.IsAnimatedWebp(file.Path);
+        bool check = WebpCenterModel.IsAnimatedWebp(file.Path);
         if (check is true)
         {
             ViolateCondition = true;
