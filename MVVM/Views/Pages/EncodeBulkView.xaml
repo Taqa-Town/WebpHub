@@ -24,12 +24,13 @@
 
             <GridView
                 x:Name="GridPreviewer"
+                Padding="30"
                 AllowDrop="True"
                 CanDragItems="True"
                 CanReorderItems="True"
                 FlowDirection="LeftToRight"
                 IsItemClickEnabled="True"
-                Margin="10"
+                x:Load="False"
                 ItemsSource="{x:Bind ViewModel.ImagesList, Mode=TwoWay}"
                 SelectionMode="None">
 
@@ -40,6 +41,7 @@
                                 x:Name="Img"
                                 Width="100"
                                 Height="80"
+                                x:Phase="1"
                                 Source="{x:Bind Location, Mode=TwoWay}"
                                 Stretch="Fill" />
                             <Button
@@ -48,6 +50,7 @@
                                 Height="20"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
+                                x:Phase="1"
                                 BorderThickness="0"
                                 Command="{Binding DataContext.DeleteCommand, Mode=OneWay, ElementName=EncodeBulk}"
                                 CommandParameter="{x:Bind ID, Mode=TwoWay}"

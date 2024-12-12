@@ -24,7 +24,8 @@
 
             <GridView
                 x:Name="GridPreviewer"
-                Margin="10"
+                Padding="30"
+                x:Load="False"
                 AllowDrop="True"
                 CanDragItems="True"
                 CanReorderItems="True"
@@ -40,7 +41,8 @@
                                 x:Name="Img"
                                 Width="100"
                                 Height="80"
-                                Source="{x:Bind Location, Mode=TwoWay}"
+                                x:Phase="1"
+                                Source="{x:Bind Location, Mode=OneWay}"
                                 Stretch="Fill" />
                             <Button
                                 x:Name="DeleteButton"
@@ -48,9 +50,10 @@
                                 Height="20"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Top"
+                                x:Phase="1"
                                 BorderThickness="0"
                                 Command="{Binding DataContext.DeleteCommand, Mode=OneWay, ElementName=DecodeBulk}"
-                                CommandParameter="{x:Bind ID, Mode=TwoWay}"
+                                CommandParameter="{x:Bind ID, Mode=OneWay}"
                                 Content="X"
                                 FontSize="5"
                                 Foreground="Black">

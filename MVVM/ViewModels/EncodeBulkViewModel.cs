@@ -148,7 +148,9 @@ public partial class EncodeBulkViewModel: ObservableObject
     {
         var id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);
+        var SelectedImImage = IMImageList.First(x => x.ID == id);
         ImagesList.Remove(SelectedImage);
+        IMImageList.Remove(SelectedImImage);
     }
 
     [RelayCommand]
