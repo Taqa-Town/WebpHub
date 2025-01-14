@@ -1,40 +1,31 @@
-﻿using Microsoft.Windows.AppLifecycle;
-using System.Text.Json;
+﻿// Ignore Spelling: App
+
+
+using Microsoft.Windows.AppLifecycle;
 
 namespace WebpHub.MVVM.ViewModels;
 
 public partial class AppSettingViewModel: ObservableObject
 {
-    [ObservableProperty]
-    private bool _violateCondition = false;
-
-    [ObservableProperty]
-    private bool _enableDark;
-
-    [ObservableProperty]
-    private bool _enableLight;
+    [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
+    [ObservableProperty] public partial bool EnableDark { get; set; } = false;
+    [ObservableProperty] public partial bool EnableLight { get; set; } = false;
 
     public AppSettingViewModel()
     {
-        string result = File.ReadAllText(App.SettingFilePath);
-        var con = JsonSerializer.Deserialize<ThemeModel>(result);
-        string theme = con.Theme;
-        
-
+        string theme = File.ReadAllText(App.SettingFilePath);
         if (theme.Contains("Light"))
             (EnableDark, EnableLight) = (true, false);
         else if (theme.Contains("Dark"))
             (EnableDark, EnableLight) = (false, true);
-
     }
 
     public void ToDark()
     {
         if (App.IsProcessing is false)
         {
-            var config = new ThemeModel { Theme = "Dark" };
-            string JsonText = JsonSerializer.Serialize(config);
-            File.WriteAllText(App.SettingFilePath, JsonText);
+            string theme = "Dark";
+            File.WriteAllText(App.SettingFilePath, theme);
             var error = AppInstance.Restart("--restart");
         }
         else
@@ -48,9 +39,8 @@ public partial class AppSettingViewModel: ObservableObject
     {
         if (App.IsProcessing is false)
         {
-            var config = new ThemeModel { Theme = "Light" };
-            string JsonText = JsonSerializer.Serialize(config);
-            File.WriteAllText(App.SettingFilePath, JsonText);
+            string theme = "Light";
+            File.WriteAllText(App.SettingFilePath, theme);
             var error = AppInstance.Restart("--restart");
         }
         else

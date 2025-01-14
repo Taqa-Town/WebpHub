@@ -1,51 +1,49 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿// Ignore Spelling: Infobar Prog Popup
+
+using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using WebpHub.InternalServices;
-using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.Storage;
 using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
 
 public partial class EncodeViewModel: ObservableObject
 {
+    #region properties
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    private string _folderPath = App.DefaultFolderPath;
+    public partial string FolderPath { get; set; } = App.DefaultFolderPath;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    private string _fullPath = string.Empty;
+    public partial string FullPath { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private string _fileName = string.Empty;
+    [ObservableProperty] public partial string ButtonContent { get; set; } = "Encode";
 
-    [ObservableProperty]
-    private string _imageResolution = string.Empty;
+    [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private string _imageExtension = string.Empty;
+    [ObservableProperty] public partial string ImageResolution { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private string _imageSize= string.Empty;
+    [ObservableProperty] public partial string ImageExtension { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private bool _OpenPop = false;
+    [ObservableProperty] public partial string ImageSize { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private ImageDataModel? _newImageData;
+    [ObservableProperty] public partial bool OpenPop { get; set; } = false;
 
-    [ObservableProperty]
-    private bool _infobarOpen = false;
+    [ObservableProperty] public partial ImageDataModel? NewImageData { get; set; }
 
-    [ObservableProperty]
-    private bool _progISActive = false;
+    [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
 
-    [ObservableProperty]
-    private bool _violateCondition = false;
+    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
 
-    [ObservableProperty]
-    private string _warrningMessage = string.Empty;
+    [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
+
+    [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
+    #endregion
+
+    #region functions
 
     [RelayCommand(CanExecute = nameof(CanEncode))]
     public async Task Encode()
@@ -55,7 +53,7 @@ public partial class EncodeViewModel: ObservableObject
         if (!Directory.Exists(FolderPath))
         {
             ViolateCondition = true;
-            WarrningMessage = "The folder doesn't exist, use a valid folder path";
+            WarningMessage = "The folder doesn't exist, use a valid folder path";
         }
         else
         {
@@ -77,6 +75,8 @@ public partial class EncodeViewModel: ObservableObject
         }
 
         App.IsProcessing = false;
+        ProgISActive = false;
+
     }
 
     [RelayCommand]
@@ -92,7 +92,7 @@ public partial class EncodeViewModel: ObservableObject
         if (check is true)
         {
             ViolateCondition = true;
-            WarrningMessage = "the picture is an animated webp, it can't be encoded";
+            WarningMessage = "the picture is an animated webp, it can't be encoded";
         }
         else
         {
@@ -134,4 +134,6 @@ public partial class EncodeViewModel: ObservableObject
         return !string.IsNullOrEmpty(FolderPath) && !string.IsNullOrEmpty(FullPath);
     }
 
+
+    #endregion
 }

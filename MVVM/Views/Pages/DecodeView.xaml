@@ -222,14 +222,14 @@
                 <InfoBar
                     x:Name="mistake"
                     IsOpen="{Binding ViolateCondition, Mode=TwoWay}"
-                    Message="{Binding WarrningMessage, Mode=OneWay}"
+                    Message="{Binding WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
 
                 <ProgressRing
                     x:Name="ProgRing"
                     Margin="0,15,0,0"
                     Background="Transparent"
-                    IsActive="{Binding ProgISActive, Mode=TwoWay}"
+                    IsActive="{Binding ProgISActive, Mode=OneWay}"
                     IsIndeterminate="True"
                     Value="50" />
             </StackPanel>

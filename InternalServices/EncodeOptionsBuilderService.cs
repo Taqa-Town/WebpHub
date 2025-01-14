@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace WebpHub.InternalServices;
 
@@ -48,11 +44,6 @@ public class EncodeOptionsBuilderService
 
     public string ConstructOptions()
     {
-        var properties = this.GetType().GetProperties();
-        StringBuilder builder = new("");
-        foreach (var property in properties)
-            builder.Append($"{property.GetValue(this)} ");
-
-        return builder.ToString();
+        return $"{Quality} {AlphaQuality} {Lossless} {NearLossless} {Preset} {CompressionMethod} {Exact} {MultiThreading} {LossySize} {LossyPsnr} {LossyPass} {LossyAutofilter} {LossyJpegLike} {DeblockingFilterStrength} {Sharpness} {Strong} {NonStrong} {SharpYuv} {Segments} {LowMemory} {PartitionLimit} {SNS} {AlphaFilter} {AlphaMethod} {NoAlpha} {NoAsm}";
     }
 }

@@ -3,6 +3,7 @@ this app use the following libraries for it ui and functionality
 CommunityToolkit.Mvvm by Microsoft
 Microsoft.WindowsAppSDK by Microsoft
 Microsoft.Web.WebView2 by Microsoft 
+Microsoft.Windows.CsWinRT by Microsoft
 WinUIEx by Morten Nielsen
 ImageSharp by SixLabours
 thanks for all the support and help 

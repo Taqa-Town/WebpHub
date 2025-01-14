@@ -1,19 +1,17 @@
 ﻿
-using WebpHub.MVVM.Models;
-using WebpHub.MVVM.ViewModels;
+
+// Ignore Spelling: Webp
 
 namespace WebpHub.MVVM.Views.Pages;
 
 public sealed partial class AnimatedWebpView : Page
 {
-    public static WebpCenterModel WebpManager { get; private set; }
-    public EncodeAnimatedWebpViewModel ViewModel { get; private set; }
+    public static WebpCenterModel? WebpManager { get;  set; } = new();
+    public EncodeAnimatedWebpViewModel ViewModel { get;  set; } = new();
 
     public AnimatedWebpView()
     {
-        ViewModel = new();
-        WebpManager = new();
-        InitializeComponent();
         DataContext = ViewModel;
+        InitializeComponent();    
     }
 }

@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using WebpHub.InternalServices;
 
 namespace WebpHub.MVVM.Models;
 
 public class ImageDataModel
 {
-    public string FullPath { get; set; }
-    public string FileName { get; set; }
-    public string ImageExtension { get; set; }
-    public string ImageSize { get; set; }
-    public string ImageResolution { get; set; }
+    public string FullPath { get; set; } = string.Empty;
+    public string FileName { get; set; } = string.Empty;
+    public string ImageExtension { get; set; } = string.Empty;
+    public string ImageSize { get; set; } = string.Empty;
+    public string ImageResolution { get; set; } = string.Empty;
+    public ImageDataModel() { }
+
 
     public ImageDataModel(DataExtractorService data)
     {

@@ -1,7 +1,7 @@
-﻿using SixLabors.ImageSharp;
-using System.Collections.ObjectModel;
+﻿// Ignore Spelling: Webp exe
+
+using SixLabors.ImageSharp;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,7 +42,7 @@ public class WebpCenterModel
             CreateNoWindow = true,
         };
         using var proc = Process.Start(info);
-        await proc.WaitForExitAsync();
+        await proc!.WaitForExitAsync();
         return true;
     }
 
@@ -59,7 +59,7 @@ public class WebpCenterModel
             CreateNoWindow = true,
         };
         using var proc = Process.Start(info);
-        await proc.WaitForExitAsync();
+        await proc!.WaitForExitAsync();
         return true;
     }
 

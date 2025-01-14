@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebpHub.InternalServices;
+﻿namespace WebpHub.InternalServices;
 
 public class DecodeOptionsBuilderService
 {
@@ -19,11 +13,6 @@ public class DecodeOptionsBuilderService
 
     public string ConstructOptions()
     {
-        var properties = this.GetType().GetProperties();
-        StringBuilder builder = new("");
-        foreach (var property in properties)
-            builder.Append($"{property.GetValue(this)} ");
-
-        return builder.ToString();
+        return $"{NoDither} {Dither} {NoFancy} {NoFilter} {Format} {MultiThreading} {NoAsm}";
     }
 }

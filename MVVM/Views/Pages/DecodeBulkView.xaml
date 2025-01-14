@@ -162,7 +162,7 @@
                 <InfoBar
                     x:Name="mistake"
                     IsOpen="{x:Bind ViewModel.ViolateCondition, Mode=TwoWay}"
-                    Message="{x:Bind ViewModel.WarrningMessage, Mode=OneWay}"
+                    Message="{x:Bind ViewModel.WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
 
                 <ProgressRing

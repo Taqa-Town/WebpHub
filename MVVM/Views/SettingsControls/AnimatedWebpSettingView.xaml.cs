@@ -1,27 +1,12 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using WebpHub.InternalServices;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+// Ignore Spelling: Webp
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using WebpHub.InternalServices;
 
 namespace WebpHub.MVVM.Views.SettingsControls;
 
 public sealed partial class AnimatedWebpSettingView : UserControl
 {
-    private Gif2WebpOptionsBuilderService _optionsBuilder;
+    private readonly Gif2WebpOptionsBuilderService _optionsBuilder;
     private readonly DispatcherTimer timer;
 
     public AnimatedWebpSettingView()

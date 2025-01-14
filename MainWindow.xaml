@@ -1,27 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Window
     x:Class="WebpHub.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WebpHub"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:WebpHub"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="WebpHub">
-    <!--<Window.SystemBackdrop>
-        <MicaBackdrop Kind="Base" />
-    </Window.SystemBackdrop>-->
+    Title="WebpHub"
+    mc:Ignorable="d">
 
     <Grid Background="{ThemeResource GridColor}">
         <NavigationView
-        x:Name="MainNavigation"
-        AlwaysShowHeader="False"
-        Background="Transparent"
-        CacheMode="BitmapCache"
-        IsBackButtonVisible="Collapsed"
-        IsSettingsVisible="False"
-        PaneDisplayMode="Top"
-        SelectionChanged="MainNavigation_SelectionChanged">
+            x:Name="MainNavigation"
+            AlwaysShowHeader="False"
+            Background="Transparent"
+            CacheMode="BitmapCache"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Top"
+            SelectionChanged="MainNavigation_SelectionChanged">
 
             <NavigationView.PaneHeader>
                 <Image Source="{ThemeResource TitleBarIcon}" />

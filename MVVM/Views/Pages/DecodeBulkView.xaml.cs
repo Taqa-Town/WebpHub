@@ -1,21 +1,16 @@
-
-using WebpHub.MVVM.Models;
-using WebpHub.MVVM.ViewModels;
+// Ignore Spelling: Webp
 
 namespace WebpHub.MVVM.Views.Pages;
 
 public sealed partial class DecodeBulkView : Page
 {
-    public static WebpCenterModel WebpManager { get; private set; }
-    public DecodeBulkViewModel ViewModel { get; private set; }
+    public static WebpCenterModel WebpManager { get; private set; } = new();
+    public DecodeBulkViewModel ViewModel { get; private set; } = new();
     public static string FormatType { get; set; } = ".png";
 
     public DecodeBulkView()
     {
-        WebpManager = new();
-        ViewModel = new();
-        InitializeComponent();
         DataContext = ViewModel;
-        
+        InitializeComponent();    
     }
 }

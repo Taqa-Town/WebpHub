@@ -13,6 +13,10 @@
     Background="{ThemeResource GridColor}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+    <Page.DataContext>
+        <viewmodels:EncodeViewModel/>
+    </Page.DataContext>
+    
 
     <Grid>
         <Grid>
@@ -32,7 +36,7 @@
                 <Button
                     Margin="20,20,0,0"
                     HorizontalAlignment="Center"
-                    Command="{Binding ImportCommand, Mode=OneWay}"
+                    Command="{Binding ImportCommand}"
                     Content="Import Image" />
 
                 <Grid>
@@ -65,8 +69,8 @@
                         Margin="10,15,0,15"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Command="{Binding EncodeCommand, Mode=OneWay}"
-                        Content="Encode" />
+                        Command="{Binding EncodeCommand}"
+                        Content="{Binding ButtonContent, Mode=OneWay}" />
                 </Grid>
 
                 <Grid>
@@ -86,7 +90,7 @@
                         Grid.Column="1"
                         Margin="5,0,0,10"
                         VerticalAlignment="Center"
-                        Command="{Binding FolderCommand, Mode=OneWay}">
+                        Command="{Binding FolderCommand}">
                         <Button.Content>
                             <FontIcon Glyph="&#xE8B7;" />
                         </Button.Content>
@@ -222,7 +226,7 @@
                 <InfoBar
                     x:Name="mistake"
                     IsOpen="{Binding ViolateCondition, Mode=TwoWay}"
-                    Message="{Binding WarrningMessage, Mode=OneWay}"
+                    Message="{Binding WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
 
                 <ProgressRing
@@ -393,7 +397,7 @@
                             Height="40"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Command="{Binding ClosePopupCommand, Mode=OneWay}"
+                            Command="{Binding ClosePopupCommand}"
                             Content="Close" />
                     </Grid>
                 </Border>

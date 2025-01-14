@@ -131,7 +131,7 @@ public sealed partial class EncodeSettingsView : UserControl
         timer.Start();
     }
 
-    private void Time_Tick(object sender, object e)
+    private void Time_Tick(object? sender, object e)
     {
         buttonText.Text = "Save";
         timer.Stop();

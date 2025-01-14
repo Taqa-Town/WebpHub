@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Ignore Spelling: Gif Webp Deblocking
+
 
 namespace WebpHub.InternalServices;
 
@@ -22,11 +19,7 @@ public class Gif2WebpOptionsBuilderService
 
     public string ConstructOptions()
     {
-        var properties = this.GetType().GetProperties();
-        StringBuilder builder = new("");
-        foreach (var property in properties)
-            builder.Append($"{property.GetValue(this)} ");
-
-        return builder.ToString();
+        return $"{Quality} {Mixed} {Lossy} {MinSize} {CompressionMethod} {KMin} {KMax} {LossyDeblockingFilterStrength} {MultiThreading} {LoopCompatibility}";
     }
+
 }

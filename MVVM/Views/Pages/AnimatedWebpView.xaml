@@ -140,6 +140,7 @@
                         IsReadOnly="True"
                         Text="{Binding FullPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
+
                 <Grid
                     Margin="3,0,3,0"
                     BorderBrush="{ThemeResource PrimaryControlColor}"
@@ -164,6 +165,7 @@
                         IsReadOnly="True"
                         Text="{Binding ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
+
                 <Grid
                     Margin="3,0,3,0"
                     BorderBrush="{ThemeResource PrimaryControlColor}"
@@ -188,6 +190,7 @@
                         IsReadOnly="True"
                         Text="{Binding ImageResolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
+
                 <Grid
                     Margin="3,0,3,0"
                     BorderBrush="{ThemeResource PrimaryControlColor}"
@@ -224,11 +227,13 @@
                     IsActive="{Binding ProgISActive, Mode=TwoWay}"
                     IsIndeterminate="True"
                     Value="50" />
+
                 <InfoBar
                     x:Name="mistake"
                     IsOpen="{Binding ViolateCondition, Mode=TwoWay}"
-                    Message="{Binding WarrningMessage, Mode=OneWay}"
+                    Message="{Binding WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
+
             </StackPanel>
 
             <Popup
@@ -394,6 +399,7 @@
                     </Grid>
                 </Border>
             </Popup>
+
         </Grid>
     </Grid>
 </Page>

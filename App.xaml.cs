@@ -1,4 +1,6 @@
-﻿global using CommunityToolkit.Mvvm.ComponentModel;
+﻿// Ignore Spelling: App Gif Webp Dwebp Cwebp
+
+global using CommunityToolkit.Mvvm.ComponentModel;
 global using Microsoft.UI.Xaml;
 global using Microsoft.UI.Xaml.Controls;
 global using System;
@@ -8,47 +10,42 @@ global using WebpHub.MVVM.Models;
 global using WebpHub.MVVM.ViewModels;
 global using WebpHub.MVVM.Views.Pages;
 using Microsoft.UI;
-using System.Text.Json;
-using Windows.Storage;
+
 
 namespace WebpHub;
 
 public partial class App : Application
 {
-    public static MainWindow MWindow { get; private set; }
-    public static string DefaultFolderPath { get; private set; }
-    public static string CwebpFilePath { get; private set; }
-    public static string DwebpFilePath { get; private set; }
-    public static string Gif2WebpFilePath { get; private set; }
-    public static string DummyImage { get; private set; }
+    public static MainWindow? MWindow { get; private set; }
+    public static string DefaultFolderPath { get; private set; } = string.Empty;
+    public static string CwebpFilePath { get; private set; } = string.Empty;
+    public static string DwebpFilePath { get; private set; } = string.Empty;
+    public static string Gif2WebpFilePath { get; private set; } = string.Empty;
+    public static string DummyImage { get; private set; } = string.Empty;
     public static bool IsProcessing { get; set; } = false;
     public static string SettingFilePath { get; private set; } = string.Empty;
+    public static string AppIcon { get; private set; } = string.Empty;
 
     public App()
     {
         GenerateFoldersAndFiles();
         InitializeComponent();
-        string result = File.ReadAllText(SettingFilePath);
-        var setting = JsonSerializer.Deserialize<ThemeModel>(result);
-        if (setting.Theme.Contains("Dark"))
+        string theme = File.ReadAllText(SettingFilePath);
+        if (theme.Contains("Dark"))
             RequestedTheme = ApplicationTheme.Dark;
-        else if (setting.Theme.Contains("Light"))
+        else if (theme.Contains("Light"))
             RequestedTheme = ApplicationTheme.Light;
-
     }
 
-
-    protected async override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         MWindow = new();
         MWindow.Activate();
 
         if (Current.RequestedTheme == ApplicationTheme.Light)
-            MainWindow.AppTitleBar.ButtonForegroundColor = Colors.Black;
+            MainWindow.AppTitleBar!.ButtonForegroundColor = Colors.Black;
         else
-            MainWindow.AppTitleBar.ButtonForegroundColor = Colors.White;
-
-
+            MainWindow.AppTitleBar!.ButtonForegroundColor = Colors.White;
     }
 
     private static void GenerateFoldersAndFiles()
@@ -60,21 +57,21 @@ public partial class App : Application
             Directory.CreateDirectory(DefaultFolderPath);
         //settings
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        SettingFilePath = Path.Combine(folder, "WebpHub", "Settings.json");
+        SettingFilePath = Path.Combine(folder, "WebpHub", "Settings.txt");
         string? folder2 = Path.GetDirectoryName(SettingFilePath);
         if (!Directory.Exists(folder2))
             Directory.CreateDirectory(folder2);
         if (!File.Exists(SettingFilePath))
         {
             File.Create(SettingFilePath).Dispose();
-            var config = new ThemeModel { Theme = "Light" };
-            string JsonText = JsonSerializer.Serialize(config);
-            File.WriteAllText(SettingFilePath, JsonText);
+            string theme = "Light";
+            File.WriteAllText(SettingFilePath, theme);
         }
         // files paths
         CwebpFilePath = Path.Combine(Directory.GetCurrentDirectory(), "ExeFiles", "cwebp.exe");
         DwebpFilePath = Path.Combine(Directory.GetCurrentDirectory(), "ExeFiles", "dwebp.exe");
         Gif2WebpFilePath = Path.Combine(Directory.GetCurrentDirectory(), "ExeFiles", "gif2webp.exe");
         DummyImage = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "unsopprtedFormat.png");
+        AppIcon = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "AppIcon.ico");
     }
 }

@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿// Ignore Spelling: Infobar Prog
+
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -9,32 +11,30 @@ using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
 
-public partial class EncodeBulkViewModel: ObservableObject
+public partial class EncodeBulkViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<ImageModel> _imagesList = [];
+    #region properties 
+
+    [ObservableProperty] public partial ObservableCollection<ImageModel> ImagesList { get; set; } = [];
     public List<ImmutableImageModel> IMImageList { get; private set; } = [];
 
-    [ObservableProperty]
-    private string _folderPath = App.DefaultFolderPath;
+    [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
 
-    [ObservableProperty]
-    private bool _infobarOpen = false;
+    [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
 
-    [ObservableProperty]
-    private bool _progISActive = false;
+    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
 
-    [ObservableProperty]
-    private bool _passedTheLimit = false;
+    [ObservableProperty] public partial bool PassedTheLimit { get; set; } = false;
 
-    [ObservableProperty]
-    private string _passedTheLimitMessage = string.Empty;
+    [ObservableProperty] public partial string PassedTheLimitMessage { get; set; } = string.Empty;
 
-    [ObservableProperty]
-    private bool _violateCondition = false;
+    [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
 
-    [ObservableProperty]
-    private string _warrningMessage = string.Empty;
+    [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
+
+    #endregion
+
+    #region functions 
 
     [RelayCommand]
     public async Task Encode()
@@ -44,22 +44,22 @@ public partial class EncodeBulkViewModel: ObservableObject
         if (ImagesList.Count <= 0)
         {
             ViolateCondition = true;
-            WarrningMessage = "You must import Images before Encoding";
+            WarningMessage = "You must import Images before Encoding";
         }
         else if (string.IsNullOrWhiteSpace(FolderPath) || string.IsNullOrEmpty(FolderPath))
         {
             ViolateCondition = true;
-            WarrningMessage = "Specify an output folder please";
+            WarningMessage = "Specify an output folder please";
         }
         else if (!Directory.Exists(FolderPath))
         {
             ViolateCondition = true;
-            WarrningMessage = "The folder doesn't exist, use a valid folder path";
+            WarningMessage = "The folder doesn't exist, use a valid folder path";
         }
         else
         {
             ProgISActive = true;
-            
+
             if (IMImageList.Count >= 1000)
             {
                 var lists = TOListOfLists(IMImageList);
@@ -93,7 +93,7 @@ public partial class EncodeBulkViewModel: ObservableObject
         int id = 0;
         int voilate = 0;
         int isAnimated = 0;
-        
+
         if (files != null)
         {
             ProgISActive = true;
@@ -125,7 +125,7 @@ public partial class EncodeBulkViewModel: ObservableObject
         if (isAnimated > 0)
         {
             ViolateCondition = true;
-            WarrningMessage = $"{isAnimated} file(s) is animated webp, they can't be encoded";
+            WarningMessage = $"{isAnimated} file(s) is animated webp, they can't be encoded";
         }
         InfobarOpen = false;
         ProgISActive = false;
@@ -181,4 +181,5 @@ public partial class EncodeBulkViewModel: ObservableObject
         return newlist;
     }
 
+    #endregion
 }
