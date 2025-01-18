@@ -23,6 +23,7 @@
   <ItemGroup>
     <None Remove="AppThemes\DarkTheme.xaml" />
     <None Remove="AppThemes\LightTheme.xaml" />
+    <None Remove="Assets\dummy2.png" />
     <None Remove="ExeFiles\cwebp.exe" />
     <None Remove="ExeFiles\dwebp.exe" />
     <None Remove="ExeFiles\gif2webp.exe" />
@@ -78,6 +79,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\dummy2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\LavenderIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

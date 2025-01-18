@@ -3,7 +3,8 @@ using WebpHub.InternalServices;
 
 namespace WebpHub.MVVM.Models;
 
-public class ImageDataModel
+[WinRT.GeneratedBindableCustomProperty]
+public partial class ImageDataModel
 {
     public string FullPath { get; set; } = string.Empty;
     public string FileName { get; set; } = string.Empty;

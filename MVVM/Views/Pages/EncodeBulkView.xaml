@@ -42,7 +42,7 @@
                                 Width="100"
                                 Height="80"
                                 x:Phase="1"
-                                Source="{x:Bind Location, Mode=TwoWay}"
+                                Source="{x:Bind Location, Mode=OneWay}"
                                 Stretch="Fill" />
                             <Button
                                 x:Name="DeleteButton"
@@ -52,8 +52,8 @@
                                 VerticalAlignment="Top"
                                 x:Phase="1"
                                 BorderThickness="0"
-                                Command="{Binding DataContext.DeleteCommand, Mode=OneWay, ElementName=EncodeBulk}"
-                                CommandParameter="{x:Bind ID, Mode=TwoWay}"
+                                Command="{Binding DataContext.DeleteCommand, ElementName=EncodeBulk}"
+                                CommandParameter="{x:Bind ID, Mode=OneWay}"
                                 Content="X"
                                 FontSize="5"
                                 Foreground="Black">
@@ -77,7 +77,7 @@
                 <Button
                     Margin="20,20,0,0"
                     HorizontalAlignment="Center"
-                    Command="{x:Bind ViewModel.ImportCommand, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ImportCommand}"
                     Content="Import Image" />
 
                 <Grid>

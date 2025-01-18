@@ -1,25 +1,15 @@
-﻿// Ignore Spelling: Webp Prog Infobar
-
-using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
-using WebpHub.InternalServices;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using WinRT.Interop;
+﻿// Ignore Spelling: Webp Prog Infobar Popup
 
 namespace WebpHub.MVVM.ViewModels;
 
+[WinRT.GeneratedBindableCustomProperty]
 public partial class EncodeAnimatedWebpViewModel : ObservableObject
 {
-    #region properties
+    #region Properties
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    public partial string FolderPath { get; set; } = App.DefaultFolderPath;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    public partial string FullPath { get; set; } = string.Empty;
+    [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
+    [ObservableProperty] public partial object ButtonContent { get; set; } = "Encode";
+    [ObservableProperty] public partial string FullPath { get; set; } = string.Empty;
 
     [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
 
@@ -39,17 +29,26 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
 
     [ObservableProperty] public partial string Error { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
 
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
 
     #endregion
 
-    #region functions
+    #region Commands
 
-    [RelayCommand]
+    public IAsyncRelayCommand EncodeCommand { get; set; }
+    public IAsyncRelayCommand ImportCommand { get; set; }
+    public IAsyncRelayCommand FolderCommand { get; set; }
+    public IAsyncRelayCommand ClosePopupCommand { get; set; }
+
+    public EncodeAnimatedWebpViewModel()
+    {
+        EncodeCommand = new AsyncRelayCommand(Encode);
+        ImportCommand = new AsyncRelayCommand(Import);
+        FolderCommand = new AsyncRelayCommand(Folder);
+        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
+    }
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".gif" } };
@@ -72,7 +71,6 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
         ViolateCondition = false;
     }
 
-    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -84,13 +82,12 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    [RelayCommand]
-    public void ClosePopup()
+    public async Task ClosePopup()
     {
         OpenPop = false;
+        await Task.CompletedTask;
     }
 
-    [RelayCommand(CanExecute = nameof(CanEncode))]
     public async Task Encode()
     {
         App.IsProcessing = true;
@@ -100,14 +97,19 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
             ViolateCondition = true;
             WarningMessage = "The folder doesn't exist, use a valid folder path";
         }
+        else if (string.IsNullOrEmpty(FullPath) || string.IsNullOrWhiteSpace(FullPath))
+        {
+            ViolateCondition = true;
+            WarningMessage = "Please import an image";
+        }
         else
         {
-            ProgISActive = true;
+            ButtonContent = new ProgressRing { IsIndeterminate = true };
             bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.Gif2WebpFilePath, FullPath, FolderPath, AnimatedWebpView.WebpManager.Options));
 
             if (isDone is true)
             {
-                ProgISActive = false;
+                ButtonContent = "Encode";
                 var name = System.IO.Path.GetFileNameWithoutExtension(FullPath) + ".webp";
                 var newImagePath = System.IO.Path.Combine(FolderPath, name);
                 var newImageStorageFile = await StorageFile.GetFileFromPathAsync(newImagePath);
@@ -118,13 +120,8 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
                 ViolateCondition = false;
             }
         }
-
+        ButtonContent = "Encode";
         App.IsProcessing = false;
-    }
-
-    private bool CanEncode()
-    {
-        return !string.IsNullOrEmpty(FolderPath) && !string.IsNullOrEmpty(FullPath);
     }
 
     #endregion

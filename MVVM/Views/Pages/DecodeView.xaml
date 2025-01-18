@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:WebpHub.MVVM.Views.SettingsControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:WebpHub.Helpers"
     xmlns:local="using:WebpHub.MVVM.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:WebpHub.MVVM.ViewModels"
@@ -24,14 +25,14 @@
                 x:Name="Previwer"
                 Grid.Column="0"
                 Margin="10"
-                Source="{Binding FullPath, Mode=OneWay}"
+                Source="{x:Bind helpers:UIHelpers.BitmapImageFromString(ViewModel.FullPath), Mode=OneWay}"
                 Stretch="Fill" />
             <!--  info section  -->
             <StackPanel x:Name="panelControl" Grid.Column="1">
                 <Button
                     Margin="20,20,0,0"
                     HorizontalAlignment="Center"
-                    Command="{Binding ImportCommand, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ImportCommand}"
                     Content="Import Image" />
 
                 <Grid>
@@ -64,7 +65,7 @@
                         Margin="10,15,0,15"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Command="{Binding DecodeCommand, Mode=OneWay}"
+                        Command="{x:Bind ViewModel.DecodeCommand}"
                         Content="Decode" />
                 </Grid>
 
@@ -79,13 +80,13 @@
                         Grid.Column="0"
                         Margin="0,0,0,10"
                         PlaceholderText="Output Folder"
-                        Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         x:Name="FolderPickerBtn"
                         Grid.Column="1"
                         Margin="5,0,0,10"
                         VerticalAlignment="Center"
-                        Command="{Binding FolderCommand, Mode=OneWay}">
+                        Command="{x:Bind ViewModel.FolderCommand}">
                         <Button.Content>
                             <FontIcon Glyph="&#xE8B7;" />
                         </Button.Content>
@@ -114,7 +115,7 @@
                         BorderThickness="1,0,0,0"
                         CornerRadius="0"
                         IsReadOnly="True"
-                        Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
 
                 <Grid
@@ -139,7 +140,7 @@
                         BorderThickness="1,0,0,0"
                         CornerRadius="0"
                         IsReadOnly="True"
-                        Text="{Binding FullPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.FullPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
                 <Grid
                     Margin="3,0,3,0"
@@ -163,7 +164,7 @@
                         BorderThickness="1,0,0,0"
                         CornerRadius="0"
                         IsReadOnly="True"
-                        Text="{Binding ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
                 <Grid
                     Margin="3,0,3,0"
@@ -187,7 +188,7 @@
                         BorderThickness="1,0,0,0"
                         CornerRadius="0"
                         IsReadOnly="True"
-                        Text="{Binding ImageResolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.ImageResolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
                 <Grid
                     Margin="3,0,3,0"
@@ -211,34 +212,29 @@
                         BorderThickness="1,0,0,0"
                         CornerRadius="0"
                         IsReadOnly="True"
-                        Text="{Binding ImageExtension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{x:Bind ViewModel.ImageExtension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
 
                 <InfoBar
                     Title="Success"
-                    IsOpen="{Binding InfobarOpen, Mode=TwoWay}"
+                    Margin="0,10,0,0"
+                    IsOpen="{x:Bind ViewModel.InfobarOpen, Mode=TwoWay}"
                     Severity="Success" />
 
                 <InfoBar
                     x:Name="mistake"
-                    IsOpen="{Binding ViolateCondition, Mode=TwoWay}"
-                    Message="{Binding WarningMessage, Mode=OneWay}"
+                    Margin="0,10,0,0"
+                    IsOpen="{x:Bind ViewModel.ViolateCondition, Mode=TwoWay}"
+                    Message="{x:Bind ViewModel.WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
 
-                <ProgressRing
-                    x:Name="ProgRing"
-                    Margin="0,15,0,0"
-                    Background="Transparent"
-                    IsActive="{Binding ProgISActive, Mode=OneWay}"
-                    IsIndeterminate="True"
-                    Value="50" />
             </StackPanel>
 
             <Popup
                 x:Name="ImageCompare"
                 DesiredPlacement="Left"
                 HorizontalOffset="-20"
-                IsOpen="{Binding OpenPop, Mode=TwoWay}"
+                IsOpen="{x:Bind ViewModel.OpenPop, Mode=TwoWay}"
                 PlacementTarget="{Binding ElementName=panelControl}"
                 VerticalOffset="200">
                 <Border
@@ -265,7 +261,7 @@
                                 <Image
                                     Grid.Row="0"
                                     Margin="10"
-                                    Source="{Binding FullPath, Mode=OneWay}"
+                                    Source="{x:Bind helpers:UIHelpers.BitmapImageFromString(ViewModel.FullPath), Mode=OneWay}"
                                     Stretch="Fill" />
                                 <StackPanel Grid.Row="1">
 
@@ -291,7 +287,7 @@
                                             BorderThickness="1,0,0,0"
                                             CornerRadius="0"
                                             IsReadOnly="True"
-                                            Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{x:Bind ViewModel.FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
 
                                     <Grid
@@ -316,7 +312,7 @@
                                             BorderThickness="1,0,0,0"
                                             CornerRadius="0"
                                             IsReadOnly="True"
-                                            Text="{Binding ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{x:Bind ViewModel.ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                 </StackPanel>
                             </Grid>
@@ -330,7 +326,7 @@
                                     x:Name="NewWebp"
                                     Grid.Row="0"
                                     Margin="10"
-                                    Source="{Binding NewImageData.FullPath, Mode=OneWay}"
+                                    Source="{x:Bind helpers:UIHelpers.BitmapImageFromString(ViewModel.NewImageData.FullPath), Mode=OneWay}"
                                     Stretch="Fill" />
 
                                 <StackPanel Grid.Row="1">
@@ -356,7 +352,7 @@
                                             BorderThickness="1,0,0,0"
                                             CornerRadius="0"
                                             IsReadOnly="True"
-                                            Text="{Binding NewImageData.FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{x:Bind ViewModel.NewImageData.FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
 
                                     <Grid
@@ -381,7 +377,7 @@
                                             BorderThickness="1,0,0,0"
                                             CornerRadius="0"
                                             IsReadOnly="True"
-                                            Text="{Binding NewImageData.ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{x:Bind ViewModel.NewImageData.ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                 </StackPanel>
                             </Grid>
@@ -393,7 +389,7 @@
                             Height="40"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Command="{Binding ClosePopupCommand, Mode=OneWay}"
+                            Command="{x:Bind ViewModel.ClosePopupCommand}"
                             Content="Close" />
                     </Grid>
                 </Border>

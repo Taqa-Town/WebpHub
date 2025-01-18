@@ -1,25 +1,15 @@
 ﻿// Ignore Spelling: Popup Prog Infobar
 
-using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
-using WebpHub.InternalServices;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using WinRT.Interop;
-
 namespace WebpHub.MVVM.ViewModels;
 
+[WinRT.GeneratedBindableCustomProperty]
 public partial class DecodeViewModel: ObservableObject
 {
-    #region properties
+    #region Properties
 
-    [ObservableProperty] 
-    [NotifyCanExecuteChangedFor(nameof(DecodeCommand))]
-    public partial string FolderPath { get; set; } = App.DefaultFolderPath;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(DecodeCommand))]
-    public partial string FullPath { get; set; } = string.Empty;
+    [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
+    [ObservableProperty] public partial object ButtonContent { get; set; } = "Decode";
+    [ObservableProperty] public partial string FullPath { get; set; } = string.Empty;
 
     [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
 
@@ -35,17 +25,26 @@ public partial class DecodeViewModel: ObservableObject
 
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
 
-    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
 
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
 
     #endregion
 
-    #region functions
+    #region Commands
 
-    [RelayCommand(CanExecute = nameof(CanDecode))]
+    public IAsyncRelayCommand DecodeCommand { get; set; }
+    public IAsyncRelayCommand ImportCommand { get; set; }
+    public IAsyncRelayCommand FolderCommand { get; set; }
+    public IAsyncRelayCommand ClosePopupCommand { get; set; }
+    public DecodeViewModel()
+    {
+        DecodeCommand = new AsyncRelayCommand(Decode);
+        ImportCommand = new AsyncRelayCommand(Import);
+        FolderCommand = new AsyncRelayCommand(Folder);
+        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
+    }
+
     public async Task Decode()
     {
         App.IsProcessing = true;
@@ -55,9 +54,14 @@ public partial class DecodeViewModel: ObservableObject
             ViolateCondition = true;
             WarningMessage = "The folder doesn't exist, use a valid folder path";
         }
+        else if (string.IsNullOrEmpty(FullPath) || string.IsNullOrWhiteSpace(FullPath))
+        {
+            ViolateCondition = true;
+            WarningMessage = "Please import an Image";
+        }
         else
         {
-            ProgISActive = true;
+            ButtonContent = new ProgressRing { IsIndeterminate = true };
             ViolateCondition = false;
             bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.DwebpFilePath, FullPath, FolderPath, DecodeView.WebpManager.Options, DecodeView.FormatType));
 
@@ -73,17 +77,17 @@ public partial class DecodeViewModel: ObservableObject
                 else
                     NewImageData = new(newData) { FullPath = App.DummyImage };
 
-                ProgISActive = false;
+                ButtonContent = "Encode";
                 OpenPop = true;
                 InfobarOpen = true;
             }
-
+            ButtonContent = "Encode";
         }
 
         App.IsProcessing = false;
     }
 
-    [RelayCommand]
+
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".webp" } };
@@ -114,7 +118,7 @@ public partial class DecodeViewModel: ObservableObject
         }
     }
 
-    [RelayCommand]
+
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -125,17 +129,10 @@ public partial class DecodeViewModel: ObservableObject
         if (folder != null)
             FolderPath = folder.Path;
     }
-
-    [RelayCommand]
-    public void ClosePopup()
+    public async Task ClosePopup()
     {
         OpenPop = false;
-    }
-
-    // disabling methods
-    private bool CanDecode()
-    {
-        return !string.IsNullOrEmpty(FolderPath) && !string.IsNullOrEmpty(FullPath);
+        await Task.CompletedTask;
     }
 
     #endregion

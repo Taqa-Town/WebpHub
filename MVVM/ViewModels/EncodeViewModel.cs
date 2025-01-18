@@ -1,26 +1,17 @@
 ﻿// Ignore Spelling: Infobar Prog Popup
 
-using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
-using WebpHub.InternalServices;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
 
+[WinRT.GeneratedBindableCustomProperty]
 public partial class EncodeViewModel: ObservableObject
 {
-    #region properties
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    public partial string FolderPath { get; set; } = App.DefaultFolderPath;
+    #region Properties
+    [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(EncodeCommand))]
-    public partial string FullPath { get; set; } = string.Empty;
+    [ObservableProperty] public partial string FullPath { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial string ButtonContent { get; set; } = "Encode";
+    [ObservableProperty] public partial object ButtonContent { get; set; } = "Encode";
 
     [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
 
@@ -36,18 +27,32 @@ public partial class EncodeViewModel: ObservableObject
 
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
 
-    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
 
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
     #endregion
 
-    #region functions
+    #region Commands
 
-    [RelayCommand(CanExecute = nameof(CanEncode))]
+    public IAsyncRelayCommand EncodeCommand { get; set; }
+    public IAsyncRelayCommand ImportCommand { get; set; }
+    public IAsyncRelayCommand FolderCommand { get; set; }
+    public IAsyncRelayCommand ClosePopupCommand { get; set; }
+
+    public EncodeViewModel()
+    {
+        EncodeCommand = new AsyncRelayCommand(Encode);
+        ImportCommand = new AsyncRelayCommand(Import);
+        FolderCommand = new AsyncRelayCommand(Folder);
+        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
+    }
     public async Task Encode()
     {
+        if(App.IsProcessing == true)
+        {
+            ViolateCondition = true;
+            WarningMessage = "The App is processing currently";
+        }
         App.IsProcessing = true;
 
         if (!Directory.Exists(FolderPath))
@@ -55,9 +60,14 @@ public partial class EncodeViewModel: ObservableObject
             ViolateCondition = true;
             WarningMessage = "The folder doesn't exist, use a valid folder path";
         }
+        else if (string.IsNullOrEmpty(FullPath) || string.IsNullOrWhiteSpace(FullPath))
+        {
+            ViolateCondition = true;
+            WarningMessage = "please import a picture";
+        }
         else
         {
-            ProgISActive = true;
+            ButtonContent = new ProgressRing { IsIndeterminate = true };
             bool isDone = await Task.Run(() => WebpCenterModel.ScriptRunner(App.CwebpFilePath, FullPath, FolderPath, EncodeView.WebpManager.Options));
             if (isDone is true)
             {
@@ -65,21 +75,19 @@ public partial class EncodeViewModel: ObservableObject
                 var newImagePath = System.IO.Path.Combine(FolderPath, name);
                 var newImageStorageFile = await StorageFile.GetFileFromPathAsync(newImagePath);
                 NewImageData = new(new DataExtractorService(newImageStorageFile));
-
                 OpenPop = true;
                 InfobarOpen = true;
-                ProgISActive = false;
+                ButtonContent = "Encode";
                 ViolateCondition = false;
             }
 
         }
 
         App.IsProcessing = false;
-        ProgISActive = false;
+        ButtonContent = "Encode";
 
     }
 
-    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".png", ".jpg", ".webp", ".tif" } };
@@ -111,7 +119,6 @@ public partial class EncodeViewModel: ObservableObject
         }
     }
 
-    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -123,17 +130,11 @@ public partial class EncodeViewModel: ObservableObject
             FolderPath = folder.Path;
     }
 
-    [RelayCommand]
-    public void ClosePopup()
+    public async Task ClosePopup()
     {
         OpenPop = false;
+        await Task.CompletedTask;
     }
-
-    private bool CanEncode()
-    {
-        return !string.IsNullOrEmpty(FolderPath) && !string.IsNullOrEmpty(FullPath);
-    }
-
 
     #endregion
 }

@@ -1,5 +1,6 @@
 // Ignore Spelling: Webp
 
+
 namespace WebpHub.MVVM.Views.Pages;
 
 public sealed partial class EncodeView : Page
@@ -11,7 +12,6 @@ public sealed partial class EncodeView : Page
         ViewModel = new();
         DataContext = ViewModel;
         InitializeComponent();
-        
     }
 }
 
