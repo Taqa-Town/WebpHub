@@ -1,42 +1,47 @@
-﻿// Ignore Spelling: Infobar Prog
+﻿// Ignore Spelling: Infobar
 
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
-
+[WinRT.GeneratedBindableCustomProperty]
 public partial class EncodeBulkViewModel : ObservableObject
 {
-    #region properties 
+    #region Properties 
 
     [ObservableProperty] public partial ObservableCollection<ImageModel> ImagesList { get; set; } = [];
     public List<ImmutableImageModel> IMImageList { get; private set; } = [];
-
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
-
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
-
-    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
-
+    [ObservableProperty] public partial object ButtonContent { get; set; } = "Encode";
+    [ObservableProperty] public partial object ImportButtonContent { get; set; } = "Import";
     [ObservableProperty] public partial bool PassedTheLimit { get; set; } = false;
-
     [ObservableProperty] public partial string PassedTheLimitMessage { get; set; } = string.Empty;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
-
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
 
     #endregion
 
-    #region functions 
+    #region Commands 
+    
+    public IAsyncRelayCommand EncodeCommand { get; set; }
+    public IAsyncRelayCommand ImportCommand { get; set; }
+    public IAsyncRelayCommand FolderCommand { get; set; }
+    public IAsyncRelayCommand DeleteCommand { get; set; }
+    public IAsyncRelayCommand ClearCommand { get; set; }
+    public IAsyncRelayCommand OpenExplorerCommand { get; set; }
 
-    [RelayCommand]
+    public EncodeBulkViewModel()
+    {
+        EncodeCommand = new AsyncRelayCommand(Encode);
+        ImportCommand = new AsyncRelayCommand(Import);
+        FolderCommand = new AsyncRelayCommand(Folder);
+        DeleteCommand = new AsyncRelayCommand(param => Delete(param));
+        ClearCommand = new AsyncRelayCommand(Clear);
+        OpenExplorerCommand = new AsyncRelayCommand(OpenExplorer);
+    }
+
     public async Task Encode()
     {
         App.IsProcessing = true;
@@ -58,8 +63,7 @@ public partial class EncodeBulkViewModel : ObservableObject
         }
         else
         {
-            ProgISActive = true;
-
+            ButtonContent = new ProgressRing { IsIndeterminate = true };
             if (IMImageList.Count >= 1000)
             {
                 var lists = TOListOfLists(IMImageList);
@@ -74,14 +78,13 @@ public partial class EncodeBulkViewModel : ObservableObject
                 await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.CwebpFilePath, IMImageList, FolderPath, EncodeBulkView.WebpManager.Options));
             }
             InfobarOpen = true;
-            ProgISActive = false;
+            ButtonContent = "Encode";
             ViolateCondition = false;
         }
 
         App.IsProcessing = false;
     }
 
-    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".png", ".jpg", ".webp", ".tif" } };
@@ -96,7 +99,7 @@ public partial class EncodeBulkViewModel : ObservableObject
 
         if (files != null)
         {
-            ProgISActive = true;
+            ImportButtonContent = new ProgressRing { IsIndeterminate = true };
             foreach (var item in files)
             {
                 bool check = WebpCenterModel.IsAnimatedWebp(item.Path);
@@ -115,7 +118,7 @@ public partial class EncodeBulkViewModel : ObservableObject
                 ImagesList.Add(new(item.Path, id, info.Length));
                 IMImageList.Add(new ImmutableImageModel { Location = item.Path, ID = id, Size = info.Length });
             }
-            ProgISActive = false;
+            ImportButtonContent = "Import";
         }
         if (voilate > 0)
         {
@@ -128,10 +131,9 @@ public partial class EncodeBulkViewModel : ObservableObject
             WarningMessage = $"{isAnimated} file(s) is animated webp, they can't be encoded";
         }
         InfobarOpen = false;
-        ProgISActive = false;
+        ImportButtonContent = "Import";
     }
 
-    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -143,26 +145,25 @@ public partial class EncodeBulkViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    [RelayCommand]
-    public void Delete(object param)
+    public async Task Delete(object param)
     {
         var id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);
         var SelectedImImage = IMImageList.First(x => x.ID == id);
         ImagesList.Remove(SelectedImage);
         IMImageList.Remove(SelectedImImage);
+        await Task.CompletedTask;
     }
 
-    [RelayCommand]
     public async Task OpenExplorer()
     {
         await Task.Run(() => Process.Start("explorer.exe", FolderPath));
     }
 
-    [RelayCommand]
-    public void Clear()
+    public async Task Clear()
     {
         ImagesList.Clear();
+        await Task.CompletedTask;
     }
 
     private static List<List<ImmutableImageModel>> TOListOfLists(List<ImmutableImageModel> ogList)
