@@ -26,7 +26,7 @@ public partial class AppSettingViewModel: ObservableObject
         {
             string theme = "Dark";
             File.WriteAllText(App.SettingFilePath, theme);
-            var error = AppInstance.Restart("--restart");
+            var _ = AppInstance.Restart("--restart");
         }
         else
         {
@@ -41,7 +41,7 @@ public partial class AppSettingViewModel: ObservableObject
         {
             string theme = "Light";
             File.WriteAllText(App.SettingFilePath, theme);
-            var error = AppInstance.Restart("--restart");
+            var _ = AppInstance.Restart("--restart");
         }
         else
         {

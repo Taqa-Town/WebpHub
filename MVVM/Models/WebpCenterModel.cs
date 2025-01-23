@@ -63,7 +63,7 @@ public class WebpCenterModel
         return true;
     }
 
-    public static async Task ScriptRunnerBulk(string exe, List<ImmutableImageModel> list, string folderPath, string options = "")
+    public static async Task ScriptRunnerBulk(string exe, List<ImageModel> list, string folderPath, string options = "")
     {
         using var proc = new Process();
         proc.StartInfo.FileName = exe;
@@ -80,7 +80,7 @@ public class WebpCenterModel
             if (item.Size < 55_050_240 && item.Size > 20_971_520) // 50mb and 20mb
                 time = 5000;
             else if (item.Size > 55_050_240) // above 50mb
-                time = 10_000;
+                time = 10_500;
 
             if (!proc.WaitForExit(time))
                 proc.Kill();
@@ -89,7 +89,7 @@ public class WebpCenterModel
         await Task.CompletedTask;
     }
 
-    public static async Task ScriptRunnerBulk(string exe, List<ImmutableImageModel> list, string folderPath, string format, string options = "")
+    public static async Task ScriptRunnerBulk(string exe, List<ImageModel> list, string folderPath, string format, string options = "")
     {
         using var proc = new Process();
         proc.StartInfo.FileName = exe;

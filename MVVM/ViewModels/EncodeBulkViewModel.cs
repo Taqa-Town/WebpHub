@@ -9,13 +9,10 @@ namespace WebpHub.MVVM.ViewModels;
 public partial class EncodeBulkViewModel : ObservableObject
 {
     #region Properties 
-
-    [ObservableProperty] public partial ObservableCollection<ImageModel> ImagesList { get; set; } = [];
-    public List<ImmutableImageModel> IMImageList { get; private set; } = [];
+    public ObservableCollection<ImageModel> ImagesList { get; set; } = [];
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
     [ObservableProperty] public partial object ButtonContent { get; set; } = "Encode";
-    [ObservableProperty] public partial object ImportButtonContent { get; set; } = "Import";
     [ObservableProperty] public partial bool PassedTheLimit { get; set; } = false;
     [ObservableProperty] public partial string PassedTheLimitMessage { get; set; } = string.Empty;
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
@@ -28,7 +25,7 @@ public partial class EncodeBulkViewModel : ObservableObject
     public IAsyncRelayCommand EncodeCommand { get; set; }
     public IAsyncRelayCommand ImportCommand { get; set; }
     public IAsyncRelayCommand FolderCommand { get; set; }
-    public IAsyncRelayCommand DeleteCommand { get; set; }
+    public IAsyncRelayCommand<object> DeleteCommand { get; set; }
     public IAsyncRelayCommand ClearCommand { get; set; }
     public IAsyncRelayCommand OpenExplorerCommand { get; set; }
 
@@ -37,7 +34,7 @@ public partial class EncodeBulkViewModel : ObservableObject
         EncodeCommand = new AsyncRelayCommand(Encode);
         ImportCommand = new AsyncRelayCommand(Import);
         FolderCommand = new AsyncRelayCommand(Folder);
-        DeleteCommand = new AsyncRelayCommand(param => Delete(param));
+        DeleteCommand = new AsyncRelayCommand<object>(Delete);
         ClearCommand = new AsyncRelayCommand(Clear);
         OpenExplorerCommand = new AsyncRelayCommand(OpenExplorer);
     }
@@ -64,9 +61,9 @@ public partial class EncodeBulkViewModel : ObservableObject
         else
         {
             ButtonContent = new ProgressRing { IsIndeterminate = true };
-            if (IMImageList.Count >= 1000)
+            if (ImagesList.Count >= 1000)
             {
-                var lists = TOListOfLists(IMImageList);
+                var lists = TOListOfLists([.. ImagesList]);
                 await Task.Run(
                 () => Parallel.ForEach(lists, async (subList) =>
                 {
@@ -75,7 +72,7 @@ public partial class EncodeBulkViewModel : ObservableObject
             }
             else
             {
-                await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.CwebpFilePath, IMImageList, FolderPath, EncodeBulkView.WebpManager.Options));
+                await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.CwebpFilePath, [.. ImagesList], FolderPath, EncodeBulkView.WebpManager.Options));
             }
             InfobarOpen = true;
             ButtonContent = "Encode";
@@ -96,10 +93,9 @@ public partial class EncodeBulkViewModel : ObservableObject
         int id = 0;
         int voilate = 0;
         int isAnimated = 0;
-
         if (files != null)
         {
-            ImportButtonContent = new ProgressRing { IsIndeterminate = true };
+            
             foreach (var item in files)
             {
                 bool check = WebpCenterModel.IsAnimatedWebp(item.Path);
@@ -115,10 +111,10 @@ public partial class EncodeBulkViewModel : ObservableObject
                     continue;
                 }
                 id++;
-                ImagesList.Add(new(item.Path, id, info.Length));
-                IMImageList.Add(new ImmutableImageModel { Location = item.Path, ID = id, Size = info.Length });
+            
+                ImagesList.Add(new ImageModel(item.Path, id, info.Length));
+
             }
-            ImportButtonContent = "Import";
         }
         if (voilate > 0)
         {
@@ -131,7 +127,6 @@ public partial class EncodeBulkViewModel : ObservableObject
             WarningMessage = $"{isAnimated} file(s) is animated webp, they can't be encoded";
         }
         InfobarOpen = false;
-        ImportButtonContent = "Import";
     }
 
     public async Task Folder()
@@ -145,13 +140,11 @@ public partial class EncodeBulkViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    public async Task Delete(object param)
+    public async Task Delete(object? param)
     {
-        var id = (Int32)param;
+        Int32 id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);
-        var SelectedImImage = IMImageList.First(x => x.ID == id);
         ImagesList.Remove(SelectedImage);
-        IMImageList.Remove(SelectedImImage);
         await Task.CompletedTask;
     }
 
@@ -166,16 +159,16 @@ public partial class EncodeBulkViewModel : ObservableObject
         await Task.CompletedTask;
     }
 
-    private static List<List<ImmutableImageModel>> TOListOfLists(List<ImmutableImageModel> ogList)
+    private static List<List<ImageModel>> TOListOfLists(List<ImageModel> ogList)
     {
-        List<List<ImmutableImageModel>> newlist = [];
+        List<List<ImageModel>> newlist = [];
         int totalSize = ogList.Count;
         int partSize = totalSize / 3;
         int remainder = totalSize % 3;
 
-        List<ImmutableImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
-        List<ImmutableImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
-        List<ImmutableImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
+        List<ImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
+        List<ImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
+        List<ImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
         newlist.Add(list1);
         newlist.Add(list2);
         newlist.Add(list3);

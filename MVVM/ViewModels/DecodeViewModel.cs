@@ -2,7 +2,6 @@
 
 namespace WebpHub.MVVM.ViewModels;
 
-[WinRT.GeneratedBindableCustomProperty]
 public partial class DecodeViewModel: ObservableObject
 {
     #region Properties
@@ -33,18 +32,7 @@ public partial class DecodeViewModel: ObservableObject
 
     #region Commands
 
-    public IAsyncRelayCommand DecodeCommand { get; set; }
-    public IAsyncRelayCommand ImportCommand { get; set; }
-    public IAsyncRelayCommand FolderCommand { get; set; }
-    public IAsyncRelayCommand ClosePopupCommand { get; set; }
-    public DecodeViewModel()
-    {
-        DecodeCommand = new AsyncRelayCommand(Decode);
-        ImportCommand = new AsyncRelayCommand(Import);
-        FolderCommand = new AsyncRelayCommand(Folder);
-        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
-    }
-
+    [RelayCommand]
     public async Task Decode()
     {
         App.IsProcessing = true;
@@ -87,7 +75,7 @@ public partial class DecodeViewModel: ObservableObject
         App.IsProcessing = false;
     }
 
-
+    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".webp" } };
@@ -118,7 +106,7 @@ public partial class DecodeViewModel: ObservableObject
         }
     }
 
-
+    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -129,6 +117,8 @@ public partial class DecodeViewModel: ObservableObject
         if (folder != null)
             FolderPath = folder.Path;
     }
+   
+    [RelayCommand]
     public async Task ClosePopup()
     {
         OpenPop = false;

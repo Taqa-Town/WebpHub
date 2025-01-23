@@ -33,7 +33,7 @@
                     Margin="20,20,0,0"
                     HorizontalAlignment="Center"
                     Command="{x:Bind ViewModel.ImportCommand}"
-                    Content="Import Image" />
+                    Content="Import" />
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -235,7 +235,7 @@
                 DesiredPlacement="Left"
                 HorizontalOffset="-20"
                 IsOpen="{x:Bind ViewModel.OpenPop, Mode=TwoWay}"
-                PlacementTarget="{Binding ElementName=panelControl}"
+                PlacementTarget="{x:Bind panelControl}"
                 VerticalOffset="200">
                 <Border
                     Width="700"

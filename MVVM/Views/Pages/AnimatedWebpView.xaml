@@ -32,7 +32,7 @@
                     Margin="20,20,0,0"
                     HorizontalAlignment="Center"
                     Command="{x:Bind ViewModel.ImportCommand}"
-                    Content="Import Gif" />
+                    Content="Import" />
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -237,7 +237,7 @@
                 DesiredPlacement="Left"
                 HorizontalOffset="-50"
                 IsOpen="{x:Bind ViewModel.OpenPop, Mode=TwoWay}"
-                PlacementTarget="{Binding ElementName=optionsButton}"
+                PlacementTarget="{x:Bind optionsButton}"
                 VerticalOffset="300">
                 <Border
                     Width="700"

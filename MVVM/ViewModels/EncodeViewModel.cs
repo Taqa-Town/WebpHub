@@ -3,7 +3,6 @@
 
 namespace WebpHub.MVVM.ViewModels;
 
-[WinRT.GeneratedBindableCustomProperty]
 public partial class EncodeViewModel: ObservableObject
 {
     #region Properties
@@ -34,18 +33,7 @@ public partial class EncodeViewModel: ObservableObject
 
     #region Commands
 
-    public IAsyncRelayCommand EncodeCommand { get; set; }
-    public IAsyncRelayCommand ImportCommand { get; set; }
-    public IAsyncRelayCommand FolderCommand { get; set; }
-    public IAsyncRelayCommand ClosePopupCommand { get; set; }
-
-    public EncodeViewModel()
-    {
-        EncodeCommand = new AsyncRelayCommand(Encode);
-        ImportCommand = new AsyncRelayCommand(Import);
-        FolderCommand = new AsyncRelayCommand(Folder);
-        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
-    }
+    [RelayCommand]
     public async Task Encode()
     {
         if(App.IsProcessing == true)
@@ -87,7 +75,8 @@ public partial class EncodeViewModel: ObservableObject
         ButtonContent = "Encode";
 
     }
-
+   
+    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".png", ".jpg", ".webp", ".tif" } };
@@ -96,15 +85,15 @@ public partial class EncodeViewModel: ObservableObject
         InitializeWithWindow.Initialize(openPicker, hWnd);
 
         var file = await openPicker.PickSingleFileAsync();
-        bool check = WebpCenterModel.IsAnimatedWebp(file.Path);
-        if (check is true)
+        if (file != null)
         {
-            ViolateCondition = true;
-            WarningMessage = "the picture is an animated webp, it can't be encoded";
-        }
-        else
-        {
-            if (file != null)
+            bool check = WebpCenterModel.IsAnimatedWebp(file.Path);
+            if (check is true)
+            {
+                ViolateCondition = true;
+                WarningMessage = "the picture is an animated webp, it can't be encoded";
+            }
+            else
             {
                 DataExtractorService extractor = new(file);
                 FullPath = extractor.FullPath;
@@ -112,13 +101,16 @@ public partial class EncodeViewModel: ObservableObject
                 ImageExtension = extractor.ImageExtension;
                 ImageResolution = extractor.ImageResolution;
                 ImageSize = extractor.ImageSize;
-            }
-            OpenPop = false;
-            InfobarOpen = false;
-            ViolateCondition = false;
-        }
-    }
 
+                OpenPop = false;
+                InfobarOpen = false;
+                ViolateCondition = false;
+            }
+        }
+            
+    }
+   
+    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -129,7 +121,8 @@ public partial class EncodeViewModel: ObservableObject
         if (folder != null)
             FolderPath = folder.Path;
     }
-
+   
+    [RelayCommand]
     public async Task ClosePopup()
     {
         OpenPop = false;

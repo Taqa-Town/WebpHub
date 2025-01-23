@@ -2,7 +2,7 @@
 
 namespace WebpHub.MVVM.ViewModels;
 
-[WinRT.GeneratedBindableCustomProperty]
+
 public partial class EncodeAnimatedWebpViewModel : ObservableObject
 {
     #region Properties
@@ -37,18 +37,7 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
 
     #region Commands
 
-    public IAsyncRelayCommand EncodeCommand { get; set; }
-    public IAsyncRelayCommand ImportCommand { get; set; }
-    public IAsyncRelayCommand FolderCommand { get; set; }
-    public IAsyncRelayCommand ClosePopupCommand { get; set; }
-
-    public EncodeAnimatedWebpViewModel()
-    {
-        EncodeCommand = new AsyncRelayCommand(Encode);
-        ImportCommand = new AsyncRelayCommand(Import);
-        FolderCommand = new AsyncRelayCommand(Folder);
-        ClosePopupCommand = new AsyncRelayCommand(ClosePopup);
-    }
+    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".gif" } };
@@ -71,6 +60,7 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
         ViolateCondition = false;
     }
 
+    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -82,12 +72,14 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
+    [RelayCommand]
     public async Task ClosePopup()
     {
         OpenPop = false;
         await Task.CompletedTask;
     }
 
+    [RelayCommand]
     public async Task Encode()
     {
         App.IsProcessing = true;

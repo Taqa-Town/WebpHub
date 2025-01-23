@@ -50,9 +50,6 @@
                 IsEnabled="{x:Bind ViewModel.EnableLight, Mode=OneWay}" />
         </StackPanel>
 
-
-
-
         <InfoBar
             Grid.Row="1"
             HorizontalAlignment="Center"

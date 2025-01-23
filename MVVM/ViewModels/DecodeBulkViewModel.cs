@@ -1,21 +1,16 @@
 ﻿// Ignore Spelling: Infobar Prog
 
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using WinRT.Interop;
 
 namespace WebpHub.MVVM.ViewModels;
 
+[WinRT.GeneratedBindableCustomProperty]
 public partial class DecodeBulkViewModel : ObservableObject
 {
-    #region properties
+    #region Properties
     [ObservableProperty] public partial ObservableCollection<ImageModel> ImagesList { get; set; } = [];
-    public List<ImmutableImageModel> IMImageList { get; private set; } = [];
 
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
 
@@ -32,9 +27,26 @@ public partial class DecodeBulkViewModel : ObservableObject
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
     #endregion
 
-    #region functions
+    #region Commands
 
-    [RelayCommand]
+    public IAsyncRelayCommand DecodeCommand { get; set; }
+    public IAsyncRelayCommand ImportCommand { get; set; }
+    public IAsyncRelayCommand FolderCommand { get; set; }
+    public IAsyncRelayCommand<object> DeleteCommand { get; set; }
+    public IAsyncRelayCommand ClearCommand { get; set; }
+    public IAsyncRelayCommand OpenExplorerCommand { get; set; }
+
+    public DecodeBulkViewModel()
+    {
+        DecodeCommand = new AsyncRelayCommand(Decode);
+        ImportCommand = new AsyncRelayCommand(Import);
+        FolderCommand = new AsyncRelayCommand(Folder);
+        DeleteCommand = new AsyncRelayCommand<object>(Delete);
+        ClearCommand = new AsyncRelayCommand(Clear);
+        OpenExplorerCommand = new AsyncRelayCommand(OpenExplorer);
+    }
+
+
     public async Task Decode()
     {
         App.IsProcessing = true;
@@ -58,9 +70,9 @@ public partial class DecodeBulkViewModel : ObservableObject
         {
             ProgISActive = true;
 
-            if (IMImageList.Count >= 1000)
+            if (ImagesList.Count >= 1000)
             {
-                var lists = TOListOfList(IMImageList);
+                var lists = TOListOfList([.. ImagesList]);
                 await Task.Run(
                 () => Parallel.ForEach(lists, async (subList) =>
                 {
@@ -69,7 +81,7 @@ public partial class DecodeBulkViewModel : ObservableObject
             }
             else
             {
-                await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.DwebpFilePath, IMImageList, FolderPath, DecodeBulkView.FormatType, DecodeBulkView.WebpManager.Options));
+                await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.DwebpFilePath, [.. ImagesList], FolderPath, DecodeBulkView.FormatType, DecodeBulkView.WebpManager.Options));
             }
             InfobarOpen = true;
             ProgISActive = false;
@@ -79,7 +91,6 @@ public partial class DecodeBulkViewModel : ObservableObject
         App.IsProcessing = false;
     }
 
-    [RelayCommand]
     public async Task Import()
     {
         var openPicker = new FileOpenPicker { ViewMode = PickerViewMode.Thumbnail, FileTypeFilter = { ".webp" } };
@@ -109,8 +120,8 @@ public partial class DecodeBulkViewModel : ObservableObject
                     continue;
                 }
                 id++;
-                ImagesList.Add(new(item.Path, id, info.Length));
-                IMImageList.Add(new ImmutableImageModel { Location = item.Path, ID = id, Size = info.Length });
+       
+                ImagesList.Add( new ImageModel(item.Path, id, info.Length) );
             }
             ProgISActive = false;
         }
@@ -127,7 +138,6 @@ public partial class DecodeBulkViewModel : ObservableObject
         InfobarOpen = false;
     }
 
-    [RelayCommand]
     public async Task Folder()
     {
         var Picker = new FolderPicker();
@@ -139,38 +149,35 @@ public partial class DecodeBulkViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    [RelayCommand]
-    public void Delete(object param)
+    public async Task Delete(object? param)
     {
         var id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);
-        var SelectedImImage = IMImageList.First(x => x.ID == id);
         ImagesList.Remove(SelectedImage);
-        IMImageList.Remove(SelectedImImage);
+        await Task.CompletedTask;
     }
 
-    [RelayCommand]
     public async Task OpenExplorer()
     {
         await Task.Run(() => Process.Start("explorer.exe", FolderPath));
     }
 
-    [RelayCommand]
-    public void Clear()
+    public async Task Clear()
     {
         ImagesList.Clear();
+        await Task.CompletedTask;
     }
 
-    private static List<List<ImmutableImageModel>> TOListOfList(List<ImmutableImageModel> ogList)
+    private static List<List<ImageModel>> TOListOfList(List<ImageModel> ogList)
     {
-        List<List<ImmutableImageModel>> newlist = [];
+        List<List<ImageModel>> newlist = [];
         int totalSize = ogList.Count;
         int partSize = totalSize / 3;
         int remainder = totalSize % 3;
 
-        List<ImmutableImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
-        List<ImmutableImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
-        List<ImmutableImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
+        List<ImageModel> list1 = ogList.GetRange(0, partSize + (remainder > 0 ? 1 : 0));
+        List<ImageModel> list2 = ogList.GetRange(list1.Count, partSize + (remainder > 1 ? 1 : 0));
+        List<ImageModel> list3 = ogList.GetRange(list1.Count + list2.Count, partSize);
         newlist.Add(list1);
         newlist.Add(list2);
         newlist.Add(list3);
