@@ -1,6 +1,4 @@
 ﻿
-using WebpHub.InternalServices;
-
 namespace WebpHub.MVVM.Models;
 
 [WinRT.GeneratedBindableCustomProperty]

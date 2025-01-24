@@ -11,19 +11,12 @@ public partial class DecodeBulkViewModel : ObservableObject
 {
     #region Properties
     [ObservableProperty] public partial ObservableCollection<ImageModel> ImagesList { get; set; } = [];
-
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
-
+    [ObservableProperty] public partial object ButtonContent { get; set; } = "Decode";
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
-
-    [ObservableProperty] public partial bool ProgISActive { get; set; } = false;
-
     [ObservableProperty] public partial bool PassedTheLimit { get; set; } = false;
-
     [ObservableProperty] public partial string PassedTheLimitMessage { get; set; } = string.Empty;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
-
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
     #endregion
 
@@ -46,7 +39,6 @@ public partial class DecodeBulkViewModel : ObservableObject
         OpenExplorerCommand = new AsyncRelayCommand(OpenExplorer);
     }
 
-
     public async Task Decode()
     {
         App.IsProcessing = true;
@@ -68,7 +60,7 @@ public partial class DecodeBulkViewModel : ObservableObject
         }
         else
         {
-            ProgISActive = true;
+            ButtonContent = new ProgressRing { IsIndeterminate = true };
 
             if (ImagesList.Count >= 1000)
             {
@@ -84,7 +76,7 @@ public partial class DecodeBulkViewModel : ObservableObject
                 await Task.Run(() => WebpCenterModel.ScriptRunnerBulk(App.DwebpFilePath, [.. ImagesList], FolderPath, DecodeBulkView.FormatType, DecodeBulkView.WebpManager.Options));
             }
             InfobarOpen = true;
-            ProgISActive = false;
+            ButtonContent = "Decode";
             ViolateCondition = false;
         }
 
@@ -100,18 +92,17 @@ public partial class DecodeBulkViewModel : ObservableObject
 
         var files = await openPicker.PickMultipleFilesAsync();
         int id = 0;
-        int voilate = 0;
+        int violate = 0;
         int isAnimated = 0;
         if (files != null)
         {
-            ProgISActive = true;
             foreach (var item in files)
             {
                 bool check = WebpCenterModel.IsAnimatedWebp(item.Path);
                 FileInfo info = new(item.Path);
                 if (info.Length > 110_100_480) // 105mb
                 {
-                    voilate++;
+                    violate++;
                     continue;
                 }
                 if (check is true)
@@ -120,16 +111,22 @@ public partial class DecodeBulkViewModel : ObservableObject
                     continue;
                 }
                 id++;
-       
+                if (ImagesList.Count > 10_000)
+                {
+                    PassedTheLimitMessage = "10,000 is the max upload limit, you can't upload more images";
+                    PassedTheLimit = true;
+                    break;
+                }
+
                 ImagesList.Add( new ImageModel(item.Path, id, info.Length) );
             }
-            ProgISActive = false;
         }
-        if (voilate > 0)
+        if (violate > 0)
         {
-            PassedTheLimitMessage = $"{voilate} file(s) couldn't be uploaded because it/they surpassed the 105mb limit";
+            PassedTheLimitMessage = $"{violate} file(s) couldn't be uploaded because it/they surpassed the 105mb limit";
             PassedTheLimit = true;
         }
+        
         if (isAnimated > 0)
         {
             ViolateCondition = true;
@@ -149,7 +146,7 @@ public partial class DecodeBulkViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    public async Task Delete(object? param)
+    public async Task Delete(object param)
     {
         var id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);

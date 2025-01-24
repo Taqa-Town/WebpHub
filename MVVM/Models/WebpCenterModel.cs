@@ -3,7 +3,6 @@
 using SixLabors.ImageSharp;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebpHub.MVVM.Models;
 
@@ -17,7 +16,7 @@ public class WebpCenterModel
         var meta = img.Metadata;
         var origins = meta.DecodedImageFormat;
         var ext = origins!.FileExtensions;
-        string? val = ext.FirstOrDefault(c => c.Contains("webp"));
+        string val = ext.FirstOrDefault(c => c.Contains("webp"));
         if(string.IsNullOrEmpty(val) || string.IsNullOrWhiteSpace(val) || !val.Contains("webp"))
             return false;
         

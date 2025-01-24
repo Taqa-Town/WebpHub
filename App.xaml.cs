@@ -23,7 +23,7 @@ namespace WebpHub;
 
 public partial class App : Application
 {
-    public static MainWindow? MWindow { get; private set; }
+    public static MainWindow MWindow { get; private set; }
     public static string DefaultFolderPath { get; private set; } = string.Empty;
     public static string CwebpFilePath { get; private set; } = string.Empty;
     public static string DwebpFilePath { get; private set; } = string.Empty;
@@ -66,7 +66,7 @@ public partial class App : Application
         //settings
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         SettingFilePath = Path.Combine(folder, "WebpHub", "Settings.txt");
-        string? folder2 = Path.GetDirectoryName(SettingFilePath);
+        string folder2 = Path.GetDirectoryName(SettingFilePath);
         if (!Directory.Exists(folder2))
             Directory.CreateDirectory(folder2);
         if (!File.Exists(SettingFilePath))

@@ -9,23 +9,14 @@ public partial class DecodeViewModel: ObservableObject
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
     [ObservableProperty] public partial object ButtonContent { get; set; } = "Decode";
     [ObservableProperty] public partial string FullPath { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageResolution { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageExtension { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageSize { get; set; } = string.Empty;
-
     [ObservableProperty] public partial bool OpenPop { get; set; } = false;
-
-    [ObservableProperty] public partial ImageDataModel? NewImageData { get; set; }
-
+    [ObservableProperty] public partial ImageDataModel NewImageData { get; set; }
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
-
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
 
     #endregion

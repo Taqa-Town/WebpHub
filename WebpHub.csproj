@@ -10,7 +10,7 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
@@ -18,12 +18,10 @@
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="Assets\AppIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="AppThemes\DarkTheme.xaml" />
     <None Remove="AppThemes\LightTheme.xaml" />
-    <None Remove="Assets\dummy2.png" />
+    <None Remove="Assets\AppIcon.ico" />
+    <None Remove="Assets\AppIcon.png" />
     <None Remove="ExeFiles\cwebp.exe" />
     <None Remove="ExeFiles\dwebp.exe" />
     <None Remove="ExeFiles\gif2webp.exe" />
@@ -79,10 +77,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Update="Assets\dummy2.png">
+    <Content Update="Assets\AppIcon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="Assets\LavenderIcon.png">
+    <Content Update="Assets\AppIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\unsopprtedFormat.png">

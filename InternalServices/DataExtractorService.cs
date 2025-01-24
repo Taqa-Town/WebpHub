@@ -1,5 +1,4 @@
-﻿using Windows.Storage;
-
+﻿
 namespace WebpHub.InternalServices;
 
 public class DataExtractorService

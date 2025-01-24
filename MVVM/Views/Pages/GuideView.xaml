@@ -21,7 +21,7 @@
         <RichTextBlock Grid.Column="1" Foreground="{ThemeResource TextColor}">
             <Paragraph FontSize="45" TextAlignment="Center">Hi User</Paragraph>
             <Paragraph>
-                This app is was design to make your life easier, it leverage the power of libwebp exe files to create an easy way to convert other image formats to webp
+               This app is was design to make your life easier, it leverage the power of libwebp exe files to create an easy way to convert other image formats to webp
             format, anything you can do in this app you can do in using
                 <Hyperlink Foreground="{ThemeResource TextColor}" NavigateUri="https://developers.google.com/speed/webp/download">LibWebP</Hyperlink>
                 but this app makes life easier.
@@ -34,13 +34,14 @@
                 Animated = convert a gif to an animated webp
                 <LineBreak />
                 <LineBreak />
-                the app support bulk conversion so you can convert images in mass, sadly the app doesn't support creating an animated webp from multiple images, hopefully in future releases this will be addressed
+              the app support bulk conversion so you can convert images in mass, sadly the app doesn't support creating an animated webp from multiple images, hopefully in future releases this will be addressed
                 <LineBreak />
                 the app can't display  pam, ppm or pgm images
                 <LineBreak />
                 <LineBreak />
                 the app value your time, it tries to balance between resources consumption and user time, keep in your mind that the app tries to finish the job as quickly as possible so a rise in cpu and ram usage will occurs
-                <LineBreak/> loading large images or collections take some time
+                <LineBreak/> loading large images or collections take some time, the max limit is 10,000, keep in your mind that the app become slow and somewhat unreponsive when trying to upload a very large collection of images, but don't worry the slowness disappears after the collection is fully loaded in the app
+                <LineBreak/> to delete images from the collection to uploaded right click on the image and click delete, you can also reorder images
             </Paragraph>
         </RichTextBlock>
     </Grid>

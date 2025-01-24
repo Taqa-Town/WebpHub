@@ -94,7 +94,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Command="{x:Bind ViewModel.DecodeCommand, Mode=OneWay}"
-                        Content="Decode" />
+                        Content="{x:Bind ViewModel.ButtonContent, Mode=OneWay}" />
                 </Grid>
 
                 <Button
@@ -129,6 +129,7 @@
 
                 <InfoBar
                     Title="Success"
+                    Margin="0 10 0 0"
                     IsOpen="{x:Bind ViewModel.InfobarOpen, Mode=TwoWay}"
                     Severity="Success">
                     <InfoBar.ActionButton>
@@ -138,23 +139,17 @@
 
                 <InfoBar
                     x:Name="failure"
+                    Margin="0 10 0 0"
                     IsOpen="{x:Bind ViewModel.PassedTheLimit, Mode=TwoWay}"
                     Message="{x:Bind ViewModel.PassedTheLimitMessage, Mode=OneWay}"
                     Severity="Warning" />
 
                 <InfoBar
                     x:Name="mistake"
+                    Margin="0 10 0 0"
                     IsOpen="{x:Bind ViewModel.ViolateCondition, Mode=TwoWay}"
                     Message="{x:Bind ViewModel.WarningMessage, Mode=OneWay}"
                     Severity="Warning" />
-
-                <ProgressRing
-                    x:Name="ProgRing"
-                    Margin="0,15,0,0"
-                    Background="Transparent"
-                    IsActive="{x:Bind ViewModel.ProgISActive, Mode=TwoWay}"
-                    IsIndeterminate="True"
-                    Value="50" />
             </StackPanel>
         </Grid>
     </Grid>

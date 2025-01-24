@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="WebpHub.AppThemes">
     <!--  icon  -->
-    <x:String x:Key="TitleBarIcon">ms-appx:///Assets/LavenderIcon.png</x:String>
+    <x:String x:Key="TitleBarIcon">ms-appx:///Assets/AppIcon.ico</x:String>
     <!--  the colors  -->
     <Color x:Key="BackgroundColor">#fef6ff</Color>
     <Color x:Key="PrimaryControlColor">#8961cc</Color>

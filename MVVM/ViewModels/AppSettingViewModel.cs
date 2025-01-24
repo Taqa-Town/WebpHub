@@ -1,6 +1,4 @@
 ﻿// Ignore Spelling: App
-
-
 using Microsoft.Windows.AppLifecycle;
 
 namespace WebpHub.MVVM.ViewModels;

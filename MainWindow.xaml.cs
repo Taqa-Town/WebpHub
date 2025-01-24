@@ -8,13 +8,13 @@ namespace WebpHub;
 
 public sealed partial class MainWindow : Window
 {
-    public static AppWindowTitleBar? AppTitleBar { get; private set; }
+    public static AppWindowTitleBar AppTitleBar { get; private set; }
 
     public MainWindow()
     {
         InitializeComponent();
         this.Maximize();
-        this.SetIcon(App.AppIcon);
+        this.SetIcon("Assets\\AppIcon.ico");
         Title = "WebpHub";
         ExtendsContentIntoTitleBar = true;
         AppTitleBar = AppWindow.TitleBar;

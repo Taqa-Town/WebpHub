@@ -111,7 +111,13 @@ public partial class EncodeBulkViewModel : ObservableObject
                     continue;
                 }
                 id++;
-            
+                if (ImagesList.Count > 10_000)
+                {
+                    PassedTheLimitMessage = "10,000 is the max upload limit, you can't upload more images";
+                    PassedTheLimit = true;
+                    break;
+                }
+
                 ImagesList.Add(new ImageModel(item.Path, id, info.Length));
 
             }
@@ -121,6 +127,7 @@ public partial class EncodeBulkViewModel : ObservableObject
             PassedTheLimitMessage = $"{voilate} file(s) couldn't be uploaded because they surpassed the 105mb limit";
             PassedTheLimit = true;
         }
+        
         if (isAnimated > 0)
         {
             ViolateCondition = true;
@@ -140,7 +147,7 @@ public partial class EncodeBulkViewModel : ObservableObject
             FolderPath = folder.Path;
     }
 
-    public async Task Delete(object? param)
+    public async Task Delete(object param)
     {
         Int32 id = (Int32)param;
         var SelectedImage = ImagesList.First(x => x.ID == id);

@@ -2,7 +2,6 @@
 
 namespace WebpHub.MVVM.ViewModels;
 
-
 public partial class EncodeAnimatedWebpViewModel : ObservableObject
 {
     #region Properties
@@ -10,27 +9,16 @@ public partial class EncodeAnimatedWebpViewModel : ObservableObject
     [ObservableProperty] public partial string FolderPath { get; set; } = App.DefaultFolderPath;
     [ObservableProperty] public partial object ButtonContent { get; set; } = "Encode";
     [ObservableProperty] public partial string FullPath { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string FileName { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageResolution { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageExtension { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string ImageSize { get; set; } = string.Empty;
-
     [ObservableProperty] public partial bool OpenPop { get; set; } = false;
-
-    [ObservableProperty] public partial ImageDataModel? NewImageData { get; set; } = new();
-
+    [ObservableProperty] public partial ImageDataModel NewImageData { get; set; } = new();
     [ObservableProperty] public partial bool InfobarOpen { get; set; } = false;
-
     [ObservableProperty] public partial string InfoMessage { get; set; } = string.Empty;
-
     [ObservableProperty] public partial string Error { get; set; } = string.Empty;
-
     [ObservableProperty] public partial bool ViolateCondition { get; set; } = false;
-
     [ObservableProperty] public partial string WarningMessage { get; set; } = string.Empty;
 
     #endregion

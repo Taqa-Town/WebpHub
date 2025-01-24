@@ -17,7 +17,7 @@
   <Properties>
     <DisplayName>WebpHub</DisplayName>
     <PublisherDisplayName>haide</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets\AppIcon.png</Logo>
   </Properties>
 
   <Dependencies>

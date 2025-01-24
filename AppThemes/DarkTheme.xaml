@@ -5,7 +5,7 @@
     xmlns:local="WebpHub.AppThemes">
 
     <!--  icon  -->
-    <x:String x:Key="TitleBarIcon">ms-appx:///Assets/LavenderIcon.png</x:String>
+    <x:String x:Key="TitleBarIcon">ms-appx:///Assets/AppIcon.ico</x:String>
     <!--  the colors  -->
     <Color x:Key="BackgroundColor">#262738</Color>
     <Color x:Key="PrimaryControlColor">#8961cc</Color>
