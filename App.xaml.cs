@@ -17,7 +17,7 @@ global using Windows.Storage;
 global using WinRT.Interop;
 global using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI;
-
+using Velopack;
 
 namespace WebpHub;
 
@@ -36,6 +36,7 @@ public partial class App : Application
 
     public App()
     {
+        VelopackApp.Build().Run();
         GenerateFoldersAndFiles();
         InitializeComponent();
         string theme = File.ReadAllText(SettingFilePath);

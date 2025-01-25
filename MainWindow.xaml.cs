@@ -14,7 +14,7 @@ public sealed partial class MainWindow : Window
     {
         InitializeComponent();
         this.Maximize();
-        this.SetIcon("Assets\\AppIcon.ico");
+        AppWindow.SetIcon("Assets\\AppIcon.ico");
         Title = "WebpHub";
         ExtendsContentIntoTitleBar = true;
         AppTitleBar = AppWindow.TitleBar;
