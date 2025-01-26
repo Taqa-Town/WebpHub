@@ -9,12 +9,14 @@ namespace WebpHub;
 public sealed partial class MainWindow : Window
 {
     public static AppWindowTitleBar AppTitleBar { get; private set; }
+    public MainViewModel ViewModel { get; private set; }
 
     public MainWindow()
     {
+        ViewModel = new();
         InitializeComponent();
         this.Maximize();
-        AppWindow.SetIcon("Assets\\AppIcon.ico");
+        AppWindow.SetIcon(ViewModel.TitleBarIcon);
         Title = "WebpHub";
         ExtendsContentIntoTitleBar = true;
         AppTitleBar = AppWindow.TitleBar;

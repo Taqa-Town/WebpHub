@@ -29,7 +29,6 @@ public partial class App : Application
     public static string DwebpFilePath { get; private set; } = string.Empty;
     public static string Gif2WebpFilePath { get; private set; } = string.Empty;
     public static string DummyImage { get; private set; } = string.Empty;
-    public static string DummyImage2 { get; private set; } = string.Empty;
     public static bool IsProcessing { get; set; } = false;
     public static string SettingFilePath { get; private set; } = string.Empty;
     public static string AppIcon { get; private set; } = string.Empty;
@@ -73,7 +72,7 @@ public partial class App : Application
         if (!File.Exists(SettingFilePath))
         {
             File.Create(SettingFilePath).Dispose();
-            string theme = "Light";
+            string theme = "Dark";
             File.WriteAllText(SettingFilePath, theme);
         }
         // files paths
@@ -82,6 +81,5 @@ public partial class App : Application
         Gif2WebpFilePath = Path.Combine(Directory.GetCurrentDirectory(), "ExeFiles", "gif2webp.exe");
         DummyImage = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "unsopprtedFormat.png");
         AppIcon = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "AppIcon.ico");
-        DummyImage2 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "dummy2.png");
     }
 }

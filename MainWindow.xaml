@@ -7,6 +7,7 @@
     xmlns:local="using:WebpHub"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="WebpHub"
+    xmlns:helpers="using:WebpHub.Helpers"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource GridColor}">
@@ -21,7 +22,7 @@
             SelectionChanged="MainNavigation_SelectionChanged">
 
             <NavigationView.PaneHeader>
-                <Image Source="{ThemeResource TitleBarIcon}" />
+                <Image Source="{x:Bind helpers:UIHelpers.BitmapImageFromString(ViewModel.TitleBarIcon), Mode=OneWay}" />
             </NavigationView.PaneHeader>
 
             <NavigationView.MenuItems>

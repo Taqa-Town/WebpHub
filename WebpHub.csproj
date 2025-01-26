@@ -16,7 +16,9 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 	<PublishAot>true</PublishAot>
 	<LangVersion>preview</LangVersion>
-  </PropertyGroup>
+	<ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+		  
+	  </PropertyGroup>
   <ItemGroup>
     <None Remove="AppThemes\DarkTheme.xaml" />
     <None Remove="AppThemes\LightTheme.xaml" />
