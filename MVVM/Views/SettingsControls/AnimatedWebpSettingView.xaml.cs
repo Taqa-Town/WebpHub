@@ -1,6 +1,5 @@
 // Ignore Spelling: Webp
 
-using WebpHub.InternalServices;
 
 namespace WebpHub.MVVM.Views.SettingsControls;
 
